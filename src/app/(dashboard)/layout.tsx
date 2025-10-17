@@ -15,13 +15,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+
+      <Topbar onToggleSidebar={toggleSidebar} />
+
+      <Box
+        sx={{ display: 'flex', flexGrow: 1, minHeight: 'calc(100vh - 64px)' }}
+      >
         <Sidebar open={sidebarOpen} />
-        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-          <Topbar onToggleSidebar={toggleSidebar} />
-          <Box component="main" sx={{ p: 3, mt: '64px' }}>
-            {children}
-          </Box>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            backgroundColor: 'grey.50',
+            minHeight: 'calc(100vh - 64px)',
+          }}
+        >
+          {children}
         </Box>
       </Box>
     </ThemeProvider>
