@@ -1,83 +1,142 @@
 'use client'
 
-import { useSession, signIn, signOut } from 'next-auth/react'
-import { Box, Button, CircularProgress, Typography, Paper } from '@mui/material'
+import React, { useState } from 'react'
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Divider,
+  CircularProgress,
+} from '@mui/material'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const { data: session, status } = useSession()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
-  if (status === 'loading') {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    )
-  }
+  const handleLogin = async () => {
+    setLoading(true)
+    setError(null)
 
-  if (!session) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
-          <Typography variant="h5" gutterBottom>
-            Você não está logado
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Faça login para acessar sua conta
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              signIn('credentials', {
-                email: 'teste@email.com',
-                password: '123456',
-                redirect: false,
-              })
-            }
-          >
-            Login de Teste
-          </Button>
-        </Paper>
-      </Box>
-    )
+    const result = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+    })
+
+    if (result?.error) {
+      setError('Email ou senha incorretos')
+      setLoading(false)
+      return
+    }
+
+    router.push('/dashboard')
   }
 
   return (
     <Box
       display="flex"
-      flexDirection="column"
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
-      gap={2}
+      bgcolor="#fafafa"
     >
-      <Paper elevation={4} sx={{ p: 4, textAlign: 'center', minWidth: 300 }}>
-        <Typography variant="h4" gutterBottom>
-          Minha página Home
-        </Typography>
+      <Box
+        width={{ xs: '100%', md: '40%' }}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        gap={2}
+      >
+        <Paper
+          elevation={0}
+          sx={{
+            border: '1px solid #dbdbdb',
+            p: 4,
+            width: 350,
+            textAlign: 'center',
+            bgcolor: 'white',
+          }}
+        >
+          <Typography variant="h4" fontWeight="400" sx={{ mb: 3 }}>
+            Dashboard
+          </Typography>
 
-        <Typography variant="h6" gutterBottom>
-          Bem-vindo, {session.user?.name || session.user?.email}
-        </Typography>
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mb: 1, bgcolor: '#fafafa' }}
+          />
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ mb: 2, bgcolor: '#fafafa' }}
+          />
 
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          Email: {session.user?.email}
-        </Typography>
+          {error && (
+            <Typography color="error" fontSize={13} sx={{ mb: 1 }}>
+              {error}
+            </Typography>
+          )}
 
-        <Button variant="outlined" color="secondary" onClick={() => signOut()}>
-          Sair
-        </Button>
-      </Paper>
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            onClick={handleLogin}
+            sx={{
+              bgcolor: '#0095f6',
+              textTransform: 'none',
+              fontWeight: 'bold',
+              mb: 2,
+              '&:hover': { bgcolor: '#1877f2' },
+            }}
+          >
+            {loading ? (
+              <CircularProgress size={22} sx={{ color: 'white' }} />
+            ) : (
+              'Entrar'
+            )}
+          </Button>
+
+          <Divider sx={{ my: 2 }}>OU</Divider>
+
+          <Typography
+            variant="body2"
+            color="primary"
+            sx={{ cursor: 'pointer', mb: 1 }}
+          >
+            Esqueceu a senha?
+          </Typography>
+
+          <Typography variant="body2">
+            Não tem uma conta?{' '}
+            <Typography
+              component="span"
+              color="primary"
+              sx={{ cursor: 'pointer', fontWeight: '500' }}
+            >
+              Cadastre-se
+            </Typography>
+          </Typography>
+        </Paper>
+      </Box>
     </Box>
   )
 }
