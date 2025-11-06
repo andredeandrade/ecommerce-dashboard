@@ -10,34 +10,50 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function Home() {
+export default function Register() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
-  const handleLogin = async () => {
-    setLoading(true)
-    setError(null)
-
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    })
-
-    if (result?.error) {
-      setError('Email ou senha incorretos')
-      setLoading(false)
+  const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Preencha todos os campos')
       return
     }
 
-    router.push('/dashboard')
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem')
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+    setSuccess(false)
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      if (email === 'teste@email.com') {
+        throw new Error('Este email já está cadastrado')
+      }
+
+      setSuccess(true)
+      setTimeout(() => {
+        router.push('/')
+      }, 1500)
+    } catch (err: any) {
+      setError(err.message || 'Erro ao registrar usuário')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -67,8 +83,18 @@ export default function Home() {
           }}
         >
           <Typography variant="h4" fontWeight="400" sx={{ mb: 3 }}>
-            Dashboard
+            Criar conta
           </Typography>
+
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="Nome completo"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ mb: 1, bgcolor: '#fafafa' }}
+          />
 
           <TextField
             fullWidth
@@ -79,6 +105,7 @@ export default function Home() {
             onChange={(e) => setEmail(e.target.value)}
             sx={{ mb: 1, bgcolor: '#fafafa' }}
           />
+
           <TextField
             fullWidth
             size="small"
@@ -87,6 +114,17 @@ export default function Home() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            sx={{ mb: 1, bgcolor: '#fafafa' }}
+          />
+
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="Confirmar senha"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             sx={{ mb: 2, bgcolor: '#fafafa' }}
           />
 
@@ -96,11 +134,17 @@ export default function Home() {
             </Typography>
           )}
 
+          {success && (
+            <Typography color="success.main" fontSize={13} sx={{ mb: 1 }}>
+              Conta criada com sucesso! Redirecionando...
+            </Typography>
+          )}
+
           <Button
             fullWidth
             variant="contained"
             disabled={loading}
-            onClick={handleLogin}
+            onClick={handleRegister}
             sx={{
               textTransform: 'none',
               fontWeight: 'bold',
@@ -110,31 +154,23 @@ export default function Home() {
             {loading ? (
               <CircularProgress size={22} sx={{ color: 'white' }} />
             ) : (
-              'Entrar'
+              'Cadastrar'
             )}
           </Button>
 
           <Divider sx={{ my: 2 }}>OU</Divider>
 
-          <Typography
-            variant="body2"
-            color="primary"
-            sx={{ cursor: 'pointer', mb: 1 }}
-          >
-            Esqueceu a senha?
-          </Typography>
-
           <Typography variant="body2">
-            Não tem uma conta?{' '}
+            Já tem uma conta?{' '}
             <Link
-              href="/register"
+              href="/"
               style={{
                 color: '#1976d2',
                 fontWeight: 500,
                 textDecoration: 'none',
               }}
             >
-              Cadastre-se
+              Entrar
             </Link>
           </Typography>
         </Paper>

@@ -10,22 +10,18 @@ const handler = NextAuth({
         password: { label: 'Senha', type: 'password' },
       },
       async authorize(credentials) {
-        // Exemplo simples: autenticação manual
         const { email, password } = credentials ?? {}
-
-        // Aqui tu colocaria a chamada real à tua API / banco de dados
         if (email === 'teste@email.com' && password === '123456') {
-          return { id: '1', name: 'Andrezinho', email }
+          return { id: '1', name: 'Tester', email }
         }
 
-        // Se falhar, retorna null
         return null
       },
     }),
   ],
 
   session: {
-    strategy: 'jwt', // mais comum para apps modernos
+    strategy: 'jwt',
   },
 
   callbacks: {
