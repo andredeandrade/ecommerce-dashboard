@@ -2,8 +2,8 @@
 
 import { ReactNode, useState } from 'react'
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
-import Sidebar from './components/SideBar'
-import Topbar from './components/TopBar'
+import Sidebar from './_components/SideBar'
+import Topbar from './_components/TopBar'
 
 const theme = createTheme()
 

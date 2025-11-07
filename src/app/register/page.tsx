@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   TextField,
@@ -10,49 +10,47 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material'
+import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+type RegisterFormData = {
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
+}
+
 export default function Register() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
-  const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      setError('Preencha todos os campos')
-      return
-    }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    setError,
+    reset,
+  } = useForm<RegisterFormData>()
 
-    if (password !== confirmPassword) {
-      setError('As senhas não coincidem')
-      return
-    }
+  const password = watch('password')
 
-    setLoading(true)
-    setError(null)
-    setSuccess(false)
-
+  const onSubmit = async (data: RegisterFormData) => {
     try {
+      // simula um delay de requisição
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      if (email === 'teste@email.com') {
-        throw new Error('Este email já está cadastrado')
+      // validação fake
+      if (data.email === 'teste@email.com') {
+        setError('email', { message: 'Este email já está cadastrado' })
+        return
       }
 
-      setSuccess(true)
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
-    } catch (err: any) {
-      setError(err.message || 'Erro ao registrar usuário')
-    } finally {
-      setLoading(false)
+      reset()
+      alert('Conta criada com sucesso!')
+      router.push('/')
+    } catch (err) {
+      setError('root', { message: 'Erro inesperado. Tente novamente.' })
     }
   }
 
@@ -86,77 +84,93 @@ export default function Register() {
             Criar conta
           </Typography>
 
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            placeholder="Nome completo"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ mb: 1, bgcolor: '#fafafa' }}
-          />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              placeholder="Nome completo"
+              sx={{ mb: 1 }}
+              {...register('name', { required: 'Informe seu nome completo' })}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
 
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{ mb: 1, bgcolor: '#fafafa' }}
-          />
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              placeholder="Email"
+              sx={{ mb: 1 }}
+              {...register('email', {
+                required: 'Informe o email',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Email inválido',
+                },
+              })}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
 
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            placeholder="Senha"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ mb: 1, bgcolor: '#fafafa' }}
-          />
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              placeholder="Senha"
+              type="password"
+              sx={{ mb: 1 }}
+              {...register('password', {
+                required: 'Informe a senha',
+                minLength: {
+                  value: 6,
+                  message: 'A senha deve ter pelo menos 6 caracteres',
+                },
+              })}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+            />
 
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            placeholder="Confirmar senha"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            sx={{ mb: 2, bgcolor: '#fafafa' }}
-          />
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              placeholder="Confirmar senha"
+              type="password"
+              sx={{ mb: 2 }}
+              {...register('confirmPassword', {
+                required: 'Confirme sua senha',
+                validate: (value) =>
+                  value === password || 'As senhas não coincidem',
+              })}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+            />
 
-          {error && (
-            <Typography color="error" fontSize={13} sx={{ mb: 1 }}>
-              {error}
-            </Typography>
-          )}
-
-          {success && (
-            <Typography color="success.main" fontSize={13} sx={{ mb: 1 }}>
-              Conta criada com sucesso! Redirecionando...
-            </Typography>
-          )}
-
-          <Button
-            fullWidth
-            variant="contained"
-            disabled={loading}
-            onClick={handleRegister}
-            sx={{
-              textTransform: 'none',
-              fontWeight: 'bold',
-              mb: 2,
-            }}
-          >
-            {loading ? (
-              <CircularProgress size={22} sx={{ color: 'white' }} />
-            ) : (
-              'Cadastrar'
+            {errors.root && (
+              <Typography color="error" fontSize={13} sx={{ mb: 1 }}>
+                {errors.root.message}
+              </Typography>
             )}
-          </Button>
+
+            <Button
+              fullWidth
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 'bold',
+                mb: 2,
+              }}
+            >
+              {isSubmitting ? (
+                <CircularProgress size={22} sx={{ color: 'white' }} />
+              ) : (
+                'Cadastrar'
+              )}
+            </Button>
+          </form>
 
           <Divider sx={{ my: 2 }}>OU</Divider>
 
