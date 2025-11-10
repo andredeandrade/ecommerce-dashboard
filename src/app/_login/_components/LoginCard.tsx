@@ -29,7 +29,7 @@ export default function LoginCard() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: 'teste@email.com', password: '123456' }, //mock defaults
   })
 
   const onSubmit = async (data: LoginFormData) => {
