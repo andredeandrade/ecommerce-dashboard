@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
+import { signIn } from '../config/auth'
 import LoginCard from '@/app/_login/_components/LoginCard'
 
 jest.mock('next/navigation', () => ({

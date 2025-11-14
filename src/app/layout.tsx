@@ -4,7 +4,6 @@ import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../config/theme'
 import { CssBaseline } from '@mui/material'
-import AuthProvider from '../providers/AuthProvider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,7 +28,7 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AuthProvider>{children}</AuthProvider>
+            {children}
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

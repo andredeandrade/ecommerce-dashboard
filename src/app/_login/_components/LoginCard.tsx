@@ -37,18 +37,21 @@ export default function LoginCard() {
     setError(null)
 
     const result = await signIn('credentials', {
-      redirect: false,
       email: data.email,
       password: data.password,
+      redirect: false,
     })
+
+    setLoading(false)
 
     if (result?.error) {
       setError('Email ou senha incorretos')
-      setLoading(false)
       return
     }
 
-    router.push('/dashboard')
+    if (result?.ok) {
+      router.push('/dashboard')
+    }
   }
 
   return (
