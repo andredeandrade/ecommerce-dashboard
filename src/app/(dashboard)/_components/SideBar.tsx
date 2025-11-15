@@ -2,24 +2,7 @@
 
 import { List, styled } from '@mui/material'
 import SidebarItem from './SidebarItem'
-import AnalyticsIcon from '@mui/icons-material/Analytics'
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined'
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
-import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined'
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
-import { appRoutes } from '@/config/routes'
-
-const iconMap = {
-  Analytics: AnalyticsIcon,
-  StorefrontOutlined: StorefrontOutlinedIcon,
-  CategoryOutlined: CategoryOutlinedIcon,
-  ShoppingCartOutlined: ShoppingCartOutlinedIcon,
-  PeopleOutlineOutlined: PeopleOutlineOutlinedIcon,
-  SettingsOutlined: SettingsOutlinedIcon,
-  LogoutOutlined: LogoutOutlinedIcon,
-}
+import { useSidebarRoutes } from '../_hooks/useSidebarRoutes'
 
 interface SidebarProps {
   open: boolean
@@ -44,6 +27,8 @@ const SidebarContainer = styled('aside')<{ open: boolean }>(
 )
 
 export default function Sidebar({ open }: SidebarProps) {
+  const routes = useSidebarRoutes()
+
   return (
     <SidebarContainer open={open}>
       <List
@@ -54,23 +39,16 @@ export default function Sidebar({ open }: SidebarProps) {
           gap: open ? '7px' : '5px',
         }}
       >
-        {appRoutes.map((route) => {
-          const IconComponent = route.iconName
-            ? iconMap[route.iconName as keyof typeof iconMap]
-            : null
-          return (
-            <SidebarItem
-              key={route.label}
-              href={route.href}
-              label={route.label}
-              icon={IconComponent ? <IconComponent /> : undefined}
-              open={open}
-              ListItemButtonProps={
-                route.onClick ? { onClick: route.onClick } : undefined
-              }
-            />
-          )
-        })}
+        {routes.map(({ label, href, onClick, IconComponent }) => (
+          <SidebarItem
+            key={label}
+            href={href}
+            label={label}
+            icon={IconComponent ? <IconComponent /> : undefined}
+            open={open}
+            ListItemButtonProps={onClick ? { onClick } : undefined}
+          />
+        ))}
       </List>
     </SidebarContainer>
   )
