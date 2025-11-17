@@ -13,6 +13,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useSnackbar } from 'notistack'
 
 type RegisterFormData = {
   name: string
@@ -23,6 +24,8 @@ type RegisterFormData = {
 
 export default function RegisterCard() {
   const router = useRouter()
+
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     register,
@@ -47,7 +50,7 @@ export default function RegisterCard() {
       }
 
       reset()
-      alert('Conta criada com sucesso!')
+      enqueueSnackbar('Conta criada com sucesso!', { variant: 'success' })
       router.push('/')
     } catch (err) {
       setError('root', { message: 'Erro inesperado. Tente novamente.' })
