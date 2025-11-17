@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { signOut } from 'next-auth/react'
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -29,11 +30,16 @@ export default function UserMenu() {
     handleClose()
   }
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     handleClose()
+
+    await signOut({
+      redirect: true,
+      callbackUrl: '/',
+    })
   }
 
-  const name = 'Andre'
+  const name = 'Test User'
   const avatarUrl = ''
 
   return (

@@ -1,7 +1,8 @@
+import React from 'react'
 import { Box } from '@mui/material'
-import LoginCard from './_login/_components/LoginCard'
+import RegisterCard from './_components/RegisterCard'
 
-export default function Home() {
+export default function Register() {
   return (
     <Box
       display="flex"
@@ -18,7 +19,7 @@ export default function Home() {
         justifyContent="center"
         gap={2}
       >
-        <LoginCard />
+        <RegisterCard />
       </Box>
     </Box>
   )
