@@ -36,34 +36,8 @@ export default function SidebarItem({
         borderRadius: 2,
         justifyContent: open ? 'initial' : 'center',
         padding: open ? '5px 10px' : '10px 5px',
-        color: isActive ? 'primary.contrastText' : 'grey.900',
-        backgroundColor: isActive ? 'primary.dark' : 'transparent',
+        color: isActive ? 'primary.main' : 'grey.900',
         transition: 'all 0.3s ease',
-        boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.3)' : 'none',
-        '&:hover': {
-          backgroundColor: isActive
-            ? 'primary.dark'
-            : !open
-              ? 'primary.main'
-              : 'transparent',
-          color: isActive
-            ? 'primary.contrastText'
-            : !open
-              ? 'primary.contrastText'
-              : 'primary.main',
-          boxShadow: !isActive
-            ? '0 2px 8px rgba(0,0,0,0.2)'
-            : '0 2px 10px rgba(0,0,0,0.4)',
-          '& .MuiListItemIcon-root': {
-            transform: !open ? 'scale(1.15)' : 'none',
-            transition: 'transform 0.3s ease',
-            color: isActive
-              ? 'primary.contrastText'
-              : !open
-                ? 'primary.contrastText'
-                : 'primary.main',
-          },
-        },
       }}
       {...ListItemButtonProps}
     >

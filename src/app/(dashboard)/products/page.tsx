@@ -1,14 +1,19 @@
-import { Button, Stack } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
+import ProductsTable from './_components/ProductsTable'
 
-export default function Products() {
+export default function ProductsPage() {
   return (
-    <div>
-      <h1>Products Page</h1>
-      <Stack spacing={2} direction="row">
-        <Button variant="text">Text</Button>
-        <Button variant="contained">Contained</Button>
-        <Button variant="outlined">Outlined</Button>
-      </Stack>
-    </div>
+    <Box display="flex" flexDirection="column" gap={4}>
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography variant="h4" fontWeight={600}>
+          Produtos
+        </Typography>
+
+        <Button variant="contained" color="primary" size="large">
+          Adicionar Produto
+        </Button>
+      </Box>
+      <ProductsTable />
+    </Box>
   )
 }
