@@ -1,17 +1,24 @@
 'use client'
 
-import { Box, BoxProps } from '@mui/material'
+import { Box, styled } from '@mui/material'
 
-export default function TableTopRight({ children, sx, ...props }: BoxProps) {
+export const TableSearchAndChips = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: theme.spacing(1),
+  width: '20%',
+}))
+
+export default function TableTopRight({ children }: any) {
   return (
     <Box
       display="flex"
       justifyContent="flex-end"
-      gap={2}
       alignItems="flex-start"
-      mb={3}
-      {...props}
-      sx={{ ...sx }}
+      width="100%"
+      gap={2}
+      mb={2}
     >
       {children}
     </Box>

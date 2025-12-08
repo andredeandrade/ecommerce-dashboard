@@ -1,47 +1,48 @@
 import { NextResponse } from 'next/server'
 
-const products = Array.from({ length: 200 }).map((_, i) => ({
-  id: i + 1,
-  name: `Produto ${i + 1}`,
-  image: i % 4 === 0 ? null : `https://picsum.photos/seed/${i}/200/200`,
-  category: ['Eletrônicos', 'Roupas', 'Casa'][i % 3],
-  brand: ['Adidas', 'Nike', 'Puma'][i % 3],
-  quantity: Math.floor(Math.random() * 100),
-  status: i % 2 === 0 ? 'Ativo' : 'Inativo',
-  price: Number((Math.random() * 300).toFixed(2)),
-}))
-
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
 
+  // Query params
   const search = searchParams.get('search') || ''
-  const models = searchParams.get('models')?.split(',') || []
   const page = Number(searchParams.get('page') || 0)
   const limit = Number(searchParams.get('limit') || 10)
+  const status = searchParams.get('status') || null
 
-  await new Promise((res) => setTimeout(res, 1200))
+  // Dados fake
+  const all = Array.from({ length: 50 }).map((_, i) => ({
+    id: i + 1,
+    name: `Produto ${i + 1}`,
+    image: i % 4 === 0 ? null : `https://picsum.photos/seed/${i}/200/200`,
+    category: ['Eletrônicos', 'Roupas', 'Casa'][i % 3],
+    brand: ['Adidas', 'Nike', 'Puma'][i % 3],
+    quantity: Math.floor(Math.random() * 100),
+    status: i % 2 === 0 ? 'active' : 'inactive',
+    price: Number((Math.random() * 300).toFixed(2)),
+  }))
 
-  let result = [...products]
+  await new Promise((r) => setTimeout(r, 1000))
 
+  // FILTRO: search
+  let filtered = all
   if (search.trim()) {
-    const term = search.toLowerCase()
-    result = result.filter(
-      (p) => p.name.toLowerCase().includes(term) || String(p.id).includes(term),
+    const t = search.toLowerCase()
+    filtered = filtered.filter(
+      (p) => p.name.toLowerCase().includes(t) || String(p.id).includes(t),
     )
   }
 
-  if (models.length > 0) {
-    result = result.filter((p) =>
-      models.some((m) => p.name.toLowerCase().includes(m.toLowerCase())),
-    )
+  // FILTRO: status
+  if (status) {
+    filtered = filtered.filter((p) => p.status === status)
   }
 
-  const total = result.length
-
-  result = result.slice(page * limit, page * limit + limit)
+  // PAGINAÇÃO
+  const start = page * limit
+  const paginated = filtered.slice(start, start + limit)
 
   return NextResponse.json({
-    items: result,
-    total,
+    items: paginated,
+    total: filtered.length,
   })
 }

@@ -26,7 +26,7 @@ export default function ProductsTableRow({ product }: Props) {
     <TableRow>
       <TableCell>
         <Link
-          href={`/products/${product.id}`}
+          href={`/product/${product.id}`}
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <Stack direction="row" spacing={2} alignItems="center">
