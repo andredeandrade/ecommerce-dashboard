@@ -1,70 +1,76 @@
-import { useState } from 'react'
+'use client'
+
 import {
-  IconButton,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+  TableRowActionsMenu,
+  TableRowActionsMenuItemDelete,
+  TableRowActionsMenuItemEdit,
+} from '@/components/ui/table/components'
+import { useRouter } from 'next/navigation'
+import { ProductRow } from './ProductsTableRow'
+import { useState } from 'react'
+import { useSnackbar } from 'notistack'
+import { useDeleteProduct } from '../_hooks/useDeleteProduct'
 import ProductsConfirmDeleteDialog from './ProductsConfirmDeleteDialog'
 
-export default function ProductsTableRowActionsMenu({ onEdit, onDelete }: any) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+type Props = {
+  product: ProductRow
+}
+
+export default function ProductsTableRowActionsMenu(props: Props) {
+  const { product } = props
+
+  const router = useRouter()
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-  const open = Boolean(anchorEl)
+  const { enqueueSnackbar } = useSnackbar()
 
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+  const deleteMutation = useDeleteProduct()
 
-  const handleClose = () => {
-    setAnchorEl(null)
+  function handleDelete(id: number) {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        enqueueSnackbar('Produto excluído com sucesso!', {
+          variant: 'success',
+        })
+        setOpenDeleteDialog(false)
+      },
+      onError: () => {
+        enqueueSnackbar('Erro ao excluir o produto.', {
+          variant: 'error',
+        })
+      },
+    })
   }
 
   return (
     <>
-      <IconButton size="small" onClick={handleOpen}>
-        <MoreHorizIcon fontSize="small" />
-      </IconButton>
-
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem
-          onClick={() => {
-            handleClose()
-            onEdit?.()
-          }}
-        >
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Editar" />
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            handleClose()
-            setOpenDeleteDialog(true)
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText primary="Excluir" />
-        </MenuItem>
-      </Menu>
+      <TableRowActionsMenu>
+        {(closeMenu) => [
+          <TableRowActionsMenuItemEdit
+            key="edit"
+            onClick={() => {
+              closeMenu()
+              router.push(`/product/${product.id}`)
+            }}
+          />,
+          <TableRowActionsMenuItemDelete
+            key="delete"
+            onClick={() => {
+              closeMenu()
+              setOpenDeleteDialog(true)
+            }}
+          />,
+        ]}
+      </TableRowActionsMenu>
 
       <ProductsConfirmDeleteDialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
         onConfirm={() => {
-          setOpenDeleteDialog(false)
-          onDelete?.()
+          handleDelete(product.id)
         }}
+        loading={deleteMutation.isPending}
       />
     </>
   )

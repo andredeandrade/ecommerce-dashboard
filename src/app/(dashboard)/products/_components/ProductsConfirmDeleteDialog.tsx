@@ -2,33 +2,50 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   DialogActions,
   Button,
-  Typography,
+  CircularProgress,
 } from '@mui/material'
+
+type Props = {
+  open: boolean
+  onClose: () => void
+  onConfirm: () => void
+  loading?: boolean
+}
 
 export default function ProductsConfirmDeleteDialog({
   open,
   onClose,
   onConfirm,
-}: any) {
+  loading = false,
+}: Props) {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <Dialog open={open} onClose={loading ? undefined : onClose}>
       <DialogTitle>Excluir produto</DialogTitle>
 
       <DialogContent>
-        <Typography>
-          Tem certeza que deseja excluir este produto? Esta ação não pode ser
+        <DialogContentText>
+          Tem certeza que deseja excluir este produto? Essa ação não pode ser
           desfeita.
-        </Typography>
+        </DialogContentText>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} color="inherit">
+        <Button onClick={onClose} disabled={loading}>
           Cancelar
         </Button>
 
-        <Button onClick={onConfirm} color="error" variant="contained">
+        <Button
+          variant="contained"
+          color="error"
+          onClick={onConfirm}
+          disabled={loading}
+          startIcon={
+            loading ? <CircularProgress size={18} color="inherit" /> : null
+          }
+        >
           Excluir
         </Button>
       </DialogActions>

@@ -5,6 +5,9 @@ import Link from 'next/link'
 import ProductsStatusBadge from './ProductsStatusBadge'
 import ProductsTableRowActionsMenu from './ProductsTableRowActionsMenu'
 import { TableCell, TableRow } from '@/components/ui/table/components'
+import { useRouter } from 'next/navigation'
+import { useDeleteProduct } from '../_hooks/useDeleteProduct'
+import { useSnackbar } from 'notistack'
 
 export type ProductRow = {
   id: number
@@ -84,10 +87,7 @@ export default function ProductsTableRow({ product }: Props) {
       <TableCell>R$ {product.price.toFixed(2)}</TableCell>
 
       <TableCell>
-        <ProductsTableRowActionsMenu
-          onEdit={() => console.log('Editar', product.id)}
-          onDelete={() => console.log('Excluir', product.id)}
-        />
+        <ProductsTableRowActionsMenu product={product} />
       </TableCell>
     </TableRow>
   )
