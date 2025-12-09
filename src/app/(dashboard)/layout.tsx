@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            padding: '30px 40px',
             backgroundColor: 'grey.50',
             minHeight: 'calc(100vh - 64px)',
           }}
