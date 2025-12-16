@@ -1,23 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteProduct } from '@/services/products/deleteProduct'
 
 export function useDeleteProduct() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: number) => {
-      const res = await fetch(`/api/products/${id}`, {
-        method: 'DELETE',
-      })
-
-      if (!res.ok) {
-        throw new Error('Erro ao deletar o produto')
-      }
-
-      return res.json()
-    },
+    mutationFn: deleteProduct,
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({
+        queryKey: ['products'],
+      })
     },
   })
 }
