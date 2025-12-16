@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import ProductsTable from './_components/ProductsTable'
+import Link from 'next/link'
 
 export default function ProductsPage() {
   return (
@@ -9,7 +10,12 @@ export default function ProductsPage() {
           Produtos
         </Typography>
 
-        <Button variant="contained" color="primary" size="large">
+        <Button
+          component={Link}
+          href="/products/new"
+          variant="contained"
+          size="large"
+        >
           Adicionar Produto
         </Button>
       </Box>
