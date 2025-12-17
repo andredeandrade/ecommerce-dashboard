@@ -4,10 +4,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { useRouter } from 'next/navigation'
 import { useCreateProduct } from '../_hooks/useCreateProduct'
-
-type ProductFormProviderProps = {
-  children: React.ReactNode
-}
+import { useUpdateProduct } from '../_hooks/useUpdateProduct'
+import { useEffect } from 'react'
 
 export type ProductFormData = {
   isActive: boolean
@@ -23,46 +21,57 @@ export type ProductFormData = {
   seoDescription?: string
 }
 
+type ProductFormProviderProps = {
+  children: React.ReactNode
+  productId?: number
+  initialData?: ProductFormData
+}
+
 export default function ProductFormProvider({
   children,
+  productId,
+  initialData,
 }: ProductFormProviderProps) {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 
   const methods = useForm<ProductFormData>({
-    defaultValues: {
+    defaultValues: initialData ?? {
       isActive: true,
       name: '',
       description: '',
       price: 0,
-      promotionalPrice: undefined,
-      sku: '',
-      quantity: 0,
-      category: '',
-      brand: '',
-      seoTitle: '',
-      seoDescription: '',
     },
-    mode: 'onBlur',
   })
 
-  const { mutateAsync, isPending } = useCreateProduct()
+  const createMutation = useCreateProduct()
+  const updateMutation = useUpdateProduct(productId!)
+
+  useEffect(() => {
+    if (initialData) {
+      methods.reset(initialData)
+    }
+  }, [initialData, methods])
 
   const onSubmit = async (data: ProductFormData) => {
     try {
-      await mutateAsync(data)
-
-      enqueueSnackbar('Produto criado com sucesso', {
-        variant: 'success',
-      })
+      if (productId) {
+        await updateMutation.mutateAsync(data)
+        enqueueSnackbar('Produto atualizado com sucesso', {
+          variant: 'success',
+        })
+      } else {
+        await createMutation.mutateAsync(data)
+        enqueueSnackbar('Produto criado com sucesso', {
+          variant: 'success',
+        })
+      }
 
       router.push('/products')
     } catch (error) {
       enqueueSnackbar(
-        error instanceof Error ? error.message : 'Erro ao criar produto',
-        {
-          variant: 'error',
-        },
+        error instanceof Error ? error.message : 'Erro ao salvar produto',
+        { variant: 'error' },
       )
     }
   }

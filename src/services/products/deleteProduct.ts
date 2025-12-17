@@ -1,5 +1,5 @@
 export async function deleteProduct(id: number) {
-  const res = await fetch(`/api/products/${id}`, {
+  const res = await fetch(`/api/product/${id}`, {
     method: 'DELETE',
   })
 

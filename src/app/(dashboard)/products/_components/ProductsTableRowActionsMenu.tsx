@@ -51,7 +51,7 @@ export default function ProductsTableRowActionsMenu(props: Props) {
             key="edit"
             onClick={() => {
               closeMenu()
-              router.push(`/product/${product.id}`)
+              router.push(`/product/${product.id}/edit`)
             }}
           />,
           <TableRowActionsMenuItemDelete

@@ -12,7 +12,7 @@ export default function ProductsPage() {
 
         <Button
           component={Link}
-          href="/products/new"
+          href="/product/create"
           variant="contained"
           size="large"
         >
