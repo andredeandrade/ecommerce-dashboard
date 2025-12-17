@@ -1,12 +1,12 @@
 'use client'
 
 import { Box, Typography, IconButton } from '@mui/material'
-import ProductForm from '../_components/ProductForm'
 import { useRouter } from 'next/navigation'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ProductFormProvider from '../_components/ProductFormProvider'
+import ProductForm from '../_components/ProductForm'
 
-export default function NewProductPage() {
+export default function CreateProductPage() {
   const router = useRouter()
 
   return (

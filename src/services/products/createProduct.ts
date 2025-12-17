@@ -1,7 +1,7 @@
-import { ProductFormData } from '@/app/(dashboard)/products/_components/ProductFormProvider'
+import { ProductFormData } from '@/app/(dashboard)/product/_components/ProductFormProvider'
 
 export async function createProduct(data: ProductFormData) {
-  const response = await fetch('/api/products', {
+  const response = await fetch('/api/product', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
