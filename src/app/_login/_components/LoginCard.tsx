@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { useState } from 'react'
+import PasswordInput from '@/components/ui/inputs/PasswordInput'
 
 type LoginFormData = {
   email: string
@@ -49,7 +50,10 @@ export default function LoginCard() {
       return
     }
 
+    console.log('result', result)
+
     if (result?.ok) {
+      console.log('Redirecionando...')
       router.push('/dashboard')
     }
   }
@@ -99,16 +103,14 @@ export default function LoginCard() {
           control={control}
           rules={{ required: 'Informe a senha' }}
           render={({ field }) => (
-            <TextField
+            <PasswordInput
               {...field}
               fullWidth
               size="small"
               variant="outlined"
               placeholder="Senha"
-              type="password"
               sx={{ mb: 2 }}
-              error={!!errors.password}
-              helperText={errors.password?.message}
+              errorMessage={errors.password?.message}
             />
           )}
         />
