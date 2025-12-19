@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSnackbar } from 'notistack'
+import PasswordInput from '@/components/ui/inputs/PasswordInput'
 
 type RegisterFormData = {
   name: string
@@ -101,12 +102,11 @@ export default function RegisterCard() {
           helperText={errors.email?.message}
         />
 
-        <TextField
+        <PasswordInput
           fullWidth
           size="small"
           variant="outlined"
           placeholder="Senha"
-          type="password"
           sx={{ mb: 1 }}
           {...register('password', {
             required: 'Informe a senha',
@@ -115,24 +115,21 @@ export default function RegisterCard() {
               message: 'A senha deve ter pelo menos 6 caracteres',
             },
           })}
-          error={!!errors.password}
-          helperText={errors.password?.message}
+          errorMessage={errors.password?.message}
         />
 
-        <TextField
+        <PasswordInput
           fullWidth
           size="small"
           variant="outlined"
           placeholder="Confirmar senha"
-          type="password"
           sx={{ mb: 2 }}
           {...register('confirmPassword', {
             required: 'Confirme sua senha',
             validate: (value) =>
               value === password || 'As senhas não coincidem',
           })}
-          error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword?.message}
+          errorMessage={errors.confirmPassword?.message}
         />
 
         {errors.root && (
