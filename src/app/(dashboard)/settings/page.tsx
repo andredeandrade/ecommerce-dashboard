@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 
-export default function ConfigsPage() {
+export default function SettingsPage() {
   return (
     <Box display="flex" flexDirection="column" gap={4}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
