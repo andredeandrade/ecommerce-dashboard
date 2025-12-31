@@ -10,6 +10,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
+import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined'
 
 type SidebarRoute = {
   label: string
@@ -29,6 +30,7 @@ export function useSidebarRoutes(): SidebarRoute[] {
       PeopleOutlineOutlined: PeopleOutlineOutlinedIcon,
       SettingsOutlined: SettingsOutlinedIcon,
       LogoutOutlined: LogoutOutlinedIcon,
+      LoyaltyOutlined: LoyaltyOutlinedIcon,
     }
 
     const appRoutes: SidebarRoute[] = [
@@ -39,6 +41,7 @@ export function useSidebarRoutes(): SidebarRoute[] {
         href: '/categories',
         iconName: 'CategoryOutlined',
       },
+      { label: 'Marcas', href: '/brands', iconName: 'LoyaltyOutlined' },
       {
         label: 'Pedidos',
         href: '/orders',
