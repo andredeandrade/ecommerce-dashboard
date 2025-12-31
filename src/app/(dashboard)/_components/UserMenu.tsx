@@ -14,8 +14,11 @@ import {
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function UserMenu() {
+  const router = useRouter()
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpen = (event: MouseEvent<HTMLElement>) => {
@@ -28,6 +31,7 @@ export default function UserMenu() {
 
   const handleAccountClick = () => {
     handleClose()
+    router.push('/myAccount')
   }
 
   const handleLogoutClick = async () => {
