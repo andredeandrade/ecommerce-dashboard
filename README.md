@@ -20,20 +20,22 @@ O objetivo do projeto é simular um cenário real de produto, incluindo controle
 
 ---
 
-🔐 Configuração de Variáveis de Ambiente
+## 🔐 Configuração de Variáveis de Ambiente
 
 Antes de rodar o projeto, é necessário configurar as variáveis de ambiente.
 
-Crie um arquivo .env na raiz do projeto com base no .env.example
+Crie um arquivo .env.local na raiz do projeto com base no .env.example
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
 Exemplo de variáveis necessárias:
 
 AUTH_SECRET=your-secret-key
+
 AUTH_URL=http://localhost:3000
+
 AUTH_TRUST_HOST=true
 
 Descrição das variáveis
@@ -50,7 +52,7 @@ Gerando uma secret segura
 openssl rand -base64 32
 ```
 
-⚠️ Nunca versionar o arquivo .env com valores reais.
+⚠️ Nunca versionar o arquivo .env.local com valores reais.
 
 ## 📦 Instalação e Uso
 
@@ -65,7 +67,7 @@ cd ecommerce-dashboard
 
 ```bash
 docker build -t ecommerce-dashboard .
-docker run -p 3000:3000 ecommerce-dashboard
+docker run --env-file .env.local -p 3000:3000 ecommerce-dashboard
 ```
 
 Instale as dependências:
