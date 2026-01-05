@@ -1,15 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
+export async function GET(req: NextRequest) {
+  const { searchParams } = req.nextUrl
 
-  // Query params
   const search = searchParams.get('search') || ''
   const page = Number(searchParams.get('page') || 0)
   const limit = Number(searchParams.get('limit') || 10)
   const status = searchParams.get('status') || null
 
-  // Dados fake
   const all = Array.from({ length: 50 }).map((_, i) => ({
     id: i + 1,
     name: `Produto ${i + 1}`,
@@ -23,8 +21,8 @@ export async function GET(req: Request) {
 
   await new Promise((r) => setTimeout(r, 1000))
 
-  // FILTRO: search
   let filtered = all
+
   if (search.trim()) {
     const t = search.toLowerCase()
     filtered = filtered.filter(
@@ -32,12 +30,10 @@ export async function GET(req: Request) {
     )
   }
 
-  // FILTRO: status
   if (status) {
     filtered = filtered.filter((p) => p.status === status)
   }
 
-  // PAGINAÇÃO
   const start = page * limit
   const paginated = filtered.slice(start, start + limit)
 

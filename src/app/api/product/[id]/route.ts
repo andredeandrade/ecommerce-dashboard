@@ -1,24 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function DELETE(
-  request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  const { id } = await context.params
-  const productId = Number(id)
-
-  await new Promise((r) => setTimeout(r, 1000))
-
-  console.log('Produto deletado:', productId)
-
-  return Response.json({ ok: true })
-}
-
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } },
-) {
-  const id = Number(params.id)
+export async function GET(req: NextRequest, context: any) {
+  const id = Number(context.params.id)
 
   const product = {
     id,
@@ -32,4 +15,14 @@ export async function GET(
   }
 
   return NextResponse.json(product)
+}
+
+export async function DELETE(req: NextRequest, context: any) {
+  const productId = Number(context.params.id)
+
+  await new Promise((r) => setTimeout(r, 1000))
+
+  console.log('Produto deletado:', productId)
+
+  return NextResponse.json({ ok: true })
 }
