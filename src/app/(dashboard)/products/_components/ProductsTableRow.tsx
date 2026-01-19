@@ -5,23 +5,10 @@ import Link from 'next/link'
 import ProductsStatusBadge from './ProductsStatusBadge'
 import ProductsTableRowActionsMenu from './ProductsTableRowActionsMenu'
 import { TableCell, TableRow } from '@/components/ui/table/components'
-import { useRouter } from 'next/navigation'
-import { useDeleteProduct } from '../_hooks/useDeleteProduct'
-import { useSnackbar } from 'notistack'
-
-export type ProductRow = {
-  id: number
-  name: string
-  image: string | null
-  category: string
-  brand: string
-  quantity: number
-  status: string
-  price: number
-}
+import { Product } from '@/types/product'
 
 type Props = {
-  product: ProductRow
+  product: Product
 }
 
 export default function ProductsTableRow({ product }: Props) {
@@ -84,7 +71,7 @@ export default function ProductsTableRow({ product }: Props) {
         <ProductsStatusBadge status={product.status} />
       </TableCell>
 
-      <TableCell>R$ {product.price.toFixed(2)}</TableCell>
+      <TableCell>R$ {product.price}</TableCell>
 
       <TableCell>
         <ProductsTableRowActionsMenu product={product} />

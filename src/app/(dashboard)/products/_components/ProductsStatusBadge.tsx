@@ -3,7 +3,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CancelIcon from '@mui/icons-material/Cancel'
 
 export default function ProductsStatusBadge({ status }: { status: string }) {
-  const isActive = status === 'active'
+  const isActive = status === 'Ativo'
 
   return (
     <Stack direction="row" spacing={1} alignItems="center">

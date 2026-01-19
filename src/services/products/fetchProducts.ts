@@ -1,4 +1,4 @@
-import { ProductsResponse } from '@/app/api/products/types'
+import { ProductsResponse } from '@/types/products'
 
 export interface UseProductsParams {
   page: number
