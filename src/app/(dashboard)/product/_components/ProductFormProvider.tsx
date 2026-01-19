@@ -15,8 +15,8 @@ export type ProductFormData = {
   promotionalPrice?: number
   sku?: string
   quantity?: number
-  category?: string
-  brand?: string
+  categoryId?: string
+  brandId?: string
   seoTitle?: string
   seoDescription?: string
 }

@@ -2,10 +2,10 @@
 
 import { Paper, Typography, Box, TextField } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
+import ProductCategorySelect from './ProductCategorySelect'
+import ProductBrandSelect from './ProductBrandSelect'
 
 export default function ProductClassification() {
-  const { register } = useProductForm()
-
   return (
     <Paper sx={{ p: 3 }}>
       <Typography fontWeight={600} mb={2}>
@@ -13,19 +13,8 @@ export default function ProductClassification() {
       </Typography>
 
       <Box display="flex" flexDirection="column" gap={2}>
-        <TextField
-          label="Categoria"
-          fullWidth
-          size="small"
-          {...register('category')}
-        />
-
-        <TextField
-          label="Marca"
-          fullWidth
-          size="small"
-          {...register('brand')}
-        />
+        <ProductCategorySelect />
+        <ProductBrandSelect />
       </Box>
     </Paper>
   )
