@@ -1,5 +1,5 @@
 export interface Product {
-  id: number
+  id: string
   name: string
   image: string | null
   category: string
@@ -7,9 +7,4 @@ export interface Product {
   quantity: number
   status: 'Ativo' | 'Inativo'
   price: number
-}
-
-export interface ProductsResponse {
-  items: Product[]
-  total: number
 }

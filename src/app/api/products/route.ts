@@ -1,44 +1,83 @@
 import { NextRequest, NextResponse } from 'next/server'
+import prisma from '@/lib/db'
+
+type ProductFindManyArgs = NonNullable<
+  Parameters<typeof prisma.product.findMany>[0]
+>
+
+type ProductWhere = ProductFindManyArgs['where']
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl
+  try {
+    const { searchParams } = req.nextUrl
 
-  const search = searchParams.get('search') || ''
-  const page = Number(searchParams.get('page') || 0)
-  const limit = Number(searchParams.get('limit') || 10)
-  const status = searchParams.get('status') || null
+    const search = searchParams.get('search') || ''
+    const rawPage = Number(searchParams.get('page'))
+    const rawLimit = Number(searchParams.get('limit'))
 
-  const all = Array.from({ length: 50 }).map((_, i) => ({
-    id: i + 1,
-    name: `Produto ${i + 1}`,
-    image: i % 4 === 0 ? null : `https://picsum.photos/seed/${i}/200/200`,
-    category: ['Eletrônicos', 'Roupas', 'Casa'][i % 3],
-    brand: ['Adidas', 'Nike', 'Puma'][i % 3],
-    quantity: Math.floor(Math.random() * 100),
-    status: i % 2 === 0 ? 'active' : 'inactive',
-    price: Number((Math.random() * 300).toFixed(2)),
-  }))
+    const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1
+    const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10
 
-  await new Promise((r) => setTimeout(r, 1000))
+    const skip = (page - 1) * limit
 
-  let filtered = all
+    const statusParam = searchParams.get('status')
+    const status =
+      statusParam && statusParam !== 'all' ? statusParam : undefined
 
-  if (search.trim()) {
-    const t = search.toLowerCase()
-    filtered = filtered.filter(
-      (p) => p.name.toLowerCase().includes(t) || String(p.id).includes(t),
+    const where: ProductWhere = {
+      name: {
+        contains: search,
+        mode: 'insensitive',
+      },
+      ...(status ? { status } : {}),
+    }
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          brand: {
+            select: {
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      prisma.product.count({ where }),
+    ])
+
+    const items = products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      image: null,
+      category: product.category?.name ?? 'Sem categoria',
+      brand: product.brand?.name ?? 'Sem marca',
+      quantity: product.quantity ?? 0,
+      status: product.isActive ? 'Ativo' : 'Inativo',
+      price: Number(product.price),
+    }))
+
+    return NextResponse.json({
+      items,
+      total,
+      page,
+      limit,
+    })
+  } catch (error) {
+    console.error('Error fetching products:', error)
+    return NextResponse.json(
+      { error: 'Erro ao buscar produtos' },
+      { status: 500 },
     )
   }
-
-  if (status) {
-    filtered = filtered.filter((p) => p.status === status)
-  }
-
-  const start = page * limit
-  const paginated = filtered.slice(start, start + limit)
-
-  return NextResponse.json({
-    items: paginated,
-    total: filtered.length,
-  })
 }
