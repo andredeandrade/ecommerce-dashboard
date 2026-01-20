@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack'
 import { useRouter } from 'next/navigation'
 import { useCreateProduct } from '../_hooks/useCreateProduct'
 import { useUpdateProduct } from '../_hooks/useUpdateProduct'
+import { useProduct } from '../_hooks/useProduct'
 import { useEffect } from 'react'
 
 export type ProductFormData = {
@@ -23,20 +24,18 @@ export type ProductFormData = {
 
 type ProductFormProviderProps = {
   children: React.ReactNode
-  productId?: number
-  initialData?: ProductFormData
+  productId?: string
 }
 
 export default function ProductFormProvider({
   children,
   productId,
-  initialData,
 }: ProductFormProviderProps) {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 
   const methods = useForm<ProductFormData>({
-    defaultValues: initialData ?? {
+    defaultValues: {
       isActive: true,
       name: '',
       description: '',
@@ -46,12 +45,15 @@ export default function ProductFormProvider({
 
   const createMutation = useCreateProduct()
   const updateMutation = useUpdateProduct(productId!)
+  const { data: product } = useProduct(productId)
 
   useEffect(() => {
-    if (initialData) {
-      methods.reset(initialData)
+    console.log('productId in form provider:', productId)
+    console.log('Product loaded in form provider:', product)
+    if (product) {
+      methods.reset(product)
     }
-  }, [initialData, methods])
+  }, [product, methods])
 
   const onSubmit = async (data: ProductFormData) => {
     try {

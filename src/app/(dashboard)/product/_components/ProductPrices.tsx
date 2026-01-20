@@ -2,6 +2,7 @@
 
 import { Paper, Typography, Box, TextField, Grid } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
+import FormTextField from '@/components/ui/inputs/FormTextField'
 
 export default function ProductPrices() {
   const {
@@ -17,7 +18,7 @@ export default function ProductPrices() {
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <TextField
+          <FormTextField
             label="Preço base"
             type="number"
             fullWidth
@@ -32,7 +33,7 @@ export default function ProductPrices() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <TextField
+          <FormTextField
             label="Preço promocional"
             type="number"
             fullWidth

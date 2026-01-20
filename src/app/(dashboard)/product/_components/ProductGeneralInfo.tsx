@@ -3,6 +3,7 @@
 import { Paper, Typography, Box, TextField } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import ProductStatus from './ProductStatus'
+import FormTextField from '@/components/ui/inputs/FormTextField'
 
 export default function ProductGeneralInfo() {
   const {
@@ -19,7 +20,7 @@ export default function ProductGeneralInfo() {
       <Box display="flex" flexDirection="column" gap={2}>
         <ProductStatus />
 
-        <TextField
+        <FormTextField
           label="Nome do produto"
           fullWidth
           size="small"
@@ -30,7 +31,7 @@ export default function ProductGeneralInfo() {
           helperText={errors.name?.message}
         />
 
-        <TextField
+        <FormTextField
           label="Descrição"
           multiline
           rows={4}

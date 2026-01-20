@@ -1,8 +1,9 @@
 'use client'
 
-import { TextField, MenuItem } from '@mui/material'
+import { MenuItem } from '@mui/material'
+import { Controller } from 'react-hook-form'
 import { useProductForm } from '../_hooks/useProductForm'
-// import { useCategories } from '../hooks/useCategories'
+import FormTextField from '@/components/ui/inputs/FormTextField'
 
 type Category = {
   id: string
@@ -16,32 +17,36 @@ const MOCK_CATEGORIES: Category[] = [
 ]
 
 export default function ProductCategorySelect() {
-  const { register } = useProductForm()
-
-  // const { data: categories = [], isLoading } = useCategories()
+  const { control } = useProductForm()
 
   const categories = MOCK_CATEGORIES
   const isLoading = false
 
   return (
-    <TextField
-      select
-      label="Categoria"
-      fullWidth
-      size="small"
-      disabled={isLoading}
+    <Controller
+      name="categoryId"
+      control={control}
       defaultValue=""
-      {...register('categoryId')}
-    >
-      <MenuItem value="">
-        <em>Sem categoria</em>
-      </MenuItem>
+      render={({ field }) => (
+        <FormTextField
+          {...field}
+          select
+          label="Categoria"
+          fullWidth
+          size="small"
+          disabled={isLoading}
+        >
+          <MenuItem value="">
+            <em>Sem categoria</em>
+          </MenuItem>
 
-      {categories.map((category) => (
-        <MenuItem key={category.id} value={category.id}>
-          {category.name}
-        </MenuItem>
-      ))}
-    </TextField>
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.id}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </FormTextField>
+      )}
+    />
   )
 }

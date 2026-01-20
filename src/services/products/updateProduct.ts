@@ -1,6 +1,6 @@
 import { ProductFormData } from '@/app/(dashboard)/product/_components/ProductFormProvider'
 
-export async function updateProduct(id: number, data: ProductFormData) {
+export async function updateProduct(id: string, data: ProductFormData) {
   const res = await fetch(`/api/product/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
