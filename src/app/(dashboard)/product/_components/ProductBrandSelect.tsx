@@ -2,6 +2,8 @@
 
 import { TextField, MenuItem } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
+import { Controller } from 'react-hook-form'
+import FormTextField from '@/components/ui/inputs/FormTextField'
 // import { useBrands } from '../hooks/useBrands'
 
 type Brand = {
@@ -16,7 +18,7 @@ const MOCK_BRANDS: Brand[] = [
 ]
 
 export default function ProductBrandSelect() {
-  const { register } = useProductForm()
+  const { control } = useProductForm()
 
   // const { data: brands = [], isLoading } = useBrands()
 
@@ -24,24 +26,30 @@ export default function ProductBrandSelect() {
   const isLoading = false
 
   return (
-    <TextField
-      select
-      label="Marca"
-      fullWidth
-      size="small"
-      disabled={isLoading}
+    <Controller
+      name="brandId"
+      control={control}
       defaultValue=""
-      {...register('brandId')}
-    >
-      <MenuItem value="">
-        <em>Sem marca</em>
-      </MenuItem>
+      render={({ field }) => (
+        <FormTextField
+          {...field}
+          select
+          label="Marca"
+          fullWidth
+          size="small"
+          disabled={isLoading}
+        >
+          <MenuItem value="">
+            <em>Sem marca</em>
+          </MenuItem>
 
-      {brands.map((brand) => (
-        <MenuItem key={brand.id} value={brand.id}>
-          {brand.name}
-        </MenuItem>
-      ))}
-    </TextField>
+          {brands.map((brand) => (
+            <MenuItem key={brand.id} value={brand.id}>
+              {brand.name}
+            </MenuItem>
+          ))}
+        </FormTextField>
+      )}
+    />
   )
 }

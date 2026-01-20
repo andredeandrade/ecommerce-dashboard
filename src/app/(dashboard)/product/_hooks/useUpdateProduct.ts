@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateProduct } from '@/services/products/updateProduct'
 import { ProductFormData } from '../_components/ProductFormProvider'
 
-export function useUpdateProduct(id: number) {
+export function useUpdateProduct(id: string) {
   const queryClient = useQueryClient()
 
   return useMutation({

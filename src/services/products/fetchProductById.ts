@@ -1,6 +1,6 @@
 import { ProductFormData } from '@/app/(dashboard)/product/_components/ProductFormProvider'
 
-export async function fetchProductById(id: number): Promise<ProductFormData> {
+export async function fetchProductById(id: string): Promise<ProductFormData> {
   const res = await fetch(`/api/product/${id}`)
 
   if (!res.ok) {

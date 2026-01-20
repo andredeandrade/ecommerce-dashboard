@@ -9,11 +9,8 @@ import ProductForm from '../../_components/ProductForm'
 
 export default function EditProductPage() {
   const params = useParams()
-  const productId = Number(params.id)
 
-  const { data, isLoading } = useProduct(productId)
-
-  if (isLoading) return null // ou Skeleton
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id
 
   return (
     <Box display="flex" flexDirection="column" gap={3}>
@@ -27,7 +24,7 @@ export default function EditProductPage() {
         </Typography>
       </Box>
 
-      <ProductFormProvider productId={productId} initialData={data}>
+      <ProductFormProvider productId={productId}>
         <ProductForm />
       </ProductFormProvider>
     </Box>

@@ -1,7 +1,8 @@
 'use client'
 
-import { Paper, Typography, Box, TextField } from '@mui/material'
+import { Paper, Typography, Box } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
+import FormTextField from '@/components/ui/inputs/FormTextField'
 
 export default function ProductSEO() {
   const { register } = useProductForm()
@@ -13,14 +14,14 @@ export default function ProductSEO() {
       </Typography>
 
       <Box display="flex" flexDirection="column" gap={2}>
-        <TextField
+        <FormTextField
           label="Título SEO"
           fullWidth
           size="small"
           {...register('seoTitle')}
         />
 
-        <TextField
+        <FormTextField
           label="Descrição SEO"
           multiline
           rows={3}
