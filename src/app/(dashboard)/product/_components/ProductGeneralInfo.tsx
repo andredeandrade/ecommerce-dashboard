@@ -4,12 +4,14 @@ import { Paper, Typography, Box, TextField } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import ProductStatus from './ProductStatus'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 export default function ProductGeneralInfo() {
   const {
     register,
     formState: { errors },
   } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   return (
     <Paper sx={{ p: 3 }}>
@@ -27,6 +29,7 @@ export default function ProductGeneralInfo() {
           {...register('name', {
             required: 'Nome do produto é obrigatório',
           })}
+          isLoading={isLoading}
           error={!!errors.name}
           helperText={errors.name?.message}
         />
@@ -37,6 +40,7 @@ export default function ProductGeneralInfo() {
           rows={4}
           fullWidth
           size="small"
+          isLoading={isLoading}
           {...register('description')}
         />
       </Box>

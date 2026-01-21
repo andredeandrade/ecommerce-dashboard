@@ -3,9 +3,11 @@
 import { Paper, Typography, Grid, TextField } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 export default function ProductInventory() {
   const { register } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   return (
     <Paper sx={{ p: 3 }}>
@@ -19,6 +21,7 @@ export default function ProductInventory() {
             label="SKU"
             fullWidth
             size="small"
+            isLoading={isLoading}
             {...register('sku')}
           />
         </Grid>
@@ -29,6 +32,7 @@ export default function ProductInventory() {
             type="number"
             fullWidth
             size="small"
+            isLoading={isLoading}
             {...register('quantity', {
               valueAsNumber: true,
               min: { value: 0, message: 'Quantidade inválida' },

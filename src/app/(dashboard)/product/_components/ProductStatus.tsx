@@ -1,11 +1,22 @@
 'use client'
 
-import { Box, Switch, Typography } from '@mui/material'
+import { Box, Switch, Typography, Skeleton } from '@mui/material'
 import { Controller } from 'react-hook-form'
 import { useProductForm } from '../_hooks/useProductForm'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 export default function ProductStatus() {
   const { control } = useProductForm()
+  const isLoading = useProductFormLoading()
+
+  if (isLoading) {
+    return (
+      <Box display="flex" alignItems="center" gap={1}>
+        <Skeleton variant="circular" width={34} height={20} />
+        <Skeleton width={60} height={20} />
+      </Box>
+    )
+  }
 
   return (
     <Controller
@@ -14,7 +25,7 @@ export default function ProductStatus() {
       render={({ field }) => (
         <Box display="flex" alignItems="center" gap={1}>
           <Switch
-            checked={field.value}
+            checked={!!field.value}
             onChange={(_, checked) => field.onChange(checked)}
           />
 
