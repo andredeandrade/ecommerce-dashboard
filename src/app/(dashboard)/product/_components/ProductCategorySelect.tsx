@@ -4,6 +4,7 @@ import { MenuItem } from '@mui/material'
 import { Controller } from 'react-hook-form'
 import { useProductForm } from '../_hooks/useProductForm'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 type Category = {
   id: string
@@ -18,9 +19,9 @@ const MOCK_CATEGORIES: Category[] = [
 
 export default function ProductCategorySelect() {
   const { control } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   const categories = MOCK_CATEGORIES
-  const isLoading = false
 
   return (
     <Controller
@@ -34,6 +35,7 @@ export default function ProductCategorySelect() {
           label="Categoria"
           fullWidth
           size="small"
+          isLoading={isLoading}
           disabled={isLoading}
         >
           <MenuItem value="">

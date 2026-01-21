@@ -3,9 +3,11 @@
 import { Paper, Typography, Box } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 export default function ProductSEO() {
   const { register } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   return (
     <Paper sx={{ p: 3 }}>
@@ -18,6 +20,7 @@ export default function ProductSEO() {
           label="Título SEO"
           fullWidth
           size="small"
+          isLoading={isLoading}
           {...register('seoTitle')}
         />
 
@@ -27,6 +30,7 @@ export default function ProductSEO() {
           rows={3}
           fullWidth
           size="small"
+          isLoading={isLoading}
           {...register('seoDescription')}
         />
       </Box>

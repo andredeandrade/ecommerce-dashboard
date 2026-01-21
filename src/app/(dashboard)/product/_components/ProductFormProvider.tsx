@@ -7,6 +7,7 @@ import { useCreateProduct } from '../_hooks/useCreateProduct'
 import { useUpdateProduct } from '../_hooks/useUpdateProduct'
 import { useProduct } from '../_hooks/useProduct'
 import { useEffect } from 'react'
+import ProductFormLoadingContext from '../_contexts/ProductFormLoadingContext'
 
 export type ProductFormData = {
   isActive: boolean
@@ -45,11 +46,9 @@ export default function ProductFormProvider({
 
   const createMutation = useCreateProduct()
   const updateMutation = useUpdateProduct(productId!)
-  const { data: product } = useProduct(productId)
+  const { data: product, isLoading } = useProduct(productId)
 
   useEffect(() => {
-    console.log('productId in form provider:', productId)
-    console.log('Product loaded in form provider:', product)
     if (product) {
       methods.reset(product)
     }
@@ -79,8 +78,10 @@ export default function ProductFormProvider({
   }
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
-    </FormProvider>
+    <ProductFormLoadingContext.Provider value={isLoading}>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+      </FormProvider>
+    </ProductFormLoadingContext.Provider>
   )
 }

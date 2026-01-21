@@ -3,7 +3,6 @@
 import { Box, Typography, IconButton } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useParams } from 'next/navigation'
-import { useProduct } from '../../_hooks/useProduct'
 import ProductFormProvider from '../../_components/ProductFormProvider'
 import ProductForm from '../../_components/ProductForm'
 

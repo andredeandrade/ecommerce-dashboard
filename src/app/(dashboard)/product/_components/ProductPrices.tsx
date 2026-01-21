@@ -3,12 +3,14 @@
 import { Paper, Typography, Box, TextField, Grid } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 
 export default function ProductPrices() {
   const {
     register,
     formState: { errors },
   } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   return (
     <Paper sx={{ p: 3 }}>
@@ -29,6 +31,7 @@ export default function ProductPrices() {
             })}
             error={!!errors.price}
             helperText={errors.price?.message}
+            isLoading={isLoading}
           />
         </Grid>
 
@@ -43,6 +46,7 @@ export default function ProductPrices() {
             })}
             error={!!errors.promotionalPrice}
             helperText={errors.promotionalPrice?.message}
+            isLoading={isLoading}
           />
         </Grid>
       </Grid>

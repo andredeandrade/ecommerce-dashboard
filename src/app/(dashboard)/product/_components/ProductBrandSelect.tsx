@@ -4,6 +4,7 @@ import { TextField, MenuItem } from '@mui/material'
 import { useProductForm } from '../_hooks/useProductForm'
 import { Controller } from 'react-hook-form'
 import FormTextField from '@/components/ui/inputs/FormTextField'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 // import { useBrands } from '../hooks/useBrands'
 
 type Brand = {
@@ -19,11 +20,11 @@ const MOCK_BRANDS: Brand[] = [
 
 export default function ProductBrandSelect() {
   const { control } = useProductForm()
+  const isLoading = useProductFormLoading()
 
   // const { data: brands = [], isLoading } = useBrands()
 
   const brands = MOCK_BRANDS
-  const isLoading = false
 
   return (
     <Controller
@@ -37,6 +38,7 @@ export default function ProductBrandSelect() {
           label="Marca"
           fullWidth
           size="small"
+          isLoading={isLoading}
           disabled={isLoading}
         >
           <MenuItem value="">
