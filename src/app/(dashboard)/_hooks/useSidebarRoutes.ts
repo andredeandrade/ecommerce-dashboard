@@ -1,8 +1,6 @@
 'use client'
 
 import { useMemo } from 'react'
-import { signOut } from 'next-auth/react'
-
 import AnalyticsIcon from '@mui/icons-material/Analytics'
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined'
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
@@ -60,7 +58,7 @@ export function useSidebarRoutes(): SidebarRoute[] {
       {
         label: 'Sair',
         iconName: 'LogoutOutlined',
-        onClick: () => signOut({ callbackUrl: '/' }),
+        onClick: () => console.log('Logout clicked'),
       },
     ]
 
