@@ -13,7 +13,6 @@ import {
 } from '@mui/material'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function UserMenu() {
@@ -36,11 +35,6 @@ export default function UserMenu() {
 
   const handleLogoutClick = async () => {
     handleClose()
-
-    await signOut({
-      redirect: true,
-      callbackUrl: '/',
-    })
   }
 
   const name = 'Test User'

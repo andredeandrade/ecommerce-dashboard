@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
@@ -34,28 +33,23 @@ export default function LoginCard() {
   })
 
   const onSubmit = async (data: LoginFormData) => {
-    setLoading(true)
-    setError(null)
-
-    const result = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    })
-
-    setLoading(false)
-
-    if (result?.error) {
-      setError('Email ou senha incorretos')
-      return
-    }
-
-    console.log('result', result)
-
-    if (result?.ok) {
-      console.log('Redirecionando...')
-      router.push('/dashboard')
-    }
+    // setLoading(true)
+    // setError(null)
+    // const result = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false,
+    // })
+    // setLoading(false)
+    // if (result?.error) {
+    //   setError('Email ou senha incorretos')
+    //   return
+    // }
+    // console.log('result', result)
+    // if (result?.ok) {
+    //   console.log('Redirecionando...')
+    //   router.push('/dashboard')
+    // }
   }
 
   return (
