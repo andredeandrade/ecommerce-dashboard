@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { useState } from 'react'
 import PasswordInput from '@/components/ui/inputs/PasswordInput'
+import { supabase } from '@/lib/supabase/client'
 
 type LoginFormData = {
   email: string
@@ -29,27 +30,26 @@ export default function LoginCard() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
-    defaultValues: { email: 'teste@email.com', password: '123456' }, //mock defaults
+    defaultValues: { email: '', password: '' },
   })
 
   const onSubmit = async (data: LoginFormData) => {
-    // setLoading(true)
-    // setError(null)
-    // const result = await signIn('credentials', {
-    //   email: data.email,
-    //   password: data.password,
-    //   redirect: false,
-    // })
-    // setLoading(false)
-    // if (result?.error) {
-    //   setError('Email ou senha incorretos')
-    //   return
-    // }
-    // console.log('result', result)
-    // if (result?.ok) {
-    //   console.log('Redirecionando...')
-    //   router.push('/dashboard')
-    // }
+    setLoading(true)
+    setError(null)
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
+
+    setLoading(false)
+
+    if (error) {
+      setError('Email ou senha incorretos')
+      return
+    }
+
+    router.push('/dashboard')
   }
 
   return (
