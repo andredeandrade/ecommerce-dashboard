@@ -8,48 +8,56 @@ datasource db {
 }
 
 model Product {
-  id               String    @id @default(uuid())
-  isActive         Boolean   @default(true)
+  id               String   @id @default(uuid())
+  isActive         Boolean  @default(true)
   name             String
   description      String?
-  price            Decimal   @db.Decimal(10, 2)
-  promotionalPrice Decimal?  @db.Decimal(10, 2)
-  sku              String?   @unique
+  price            Decimal  @db.Decimal(10, 2)
+  promotionalPrice Decimal? @db.Decimal(10, 2)
+  sku              String?  @unique
   quantity         Int?
-  seoTitle         String?
-  seoDescription   String?
-  categoryId       String?
-  category         Category? @relation(fields: [categoryId], references: [id])
-  brandId          String?
-  brand            Brand?    @relation(fields: [brandId], references: [id])
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  brandId String?
+  brand   Brand?  @relation(fields: [brandId], references: [id])
 
   @@map("products")
 }
 
 model Category {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  description String?
-  isActive    Boolean   @default(true)
-  products    Product[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("categories")
 }
 
 model Brand {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  description String?
-  isActive    Boolean   @default(true)
-  products    Product[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("brands")
+}
+
+model Profile {
+  id        String   @id @db.Uuid
+  email     String?  @unique
+  name      String?
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+
+  @@map("profiles")
 }
