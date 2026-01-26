@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSnackbar } from 'notistack'
 import PasswordInput from '@/components/ui/inputs/PasswordInput'
+import { supabase } from '@/lib/supabase/client'
 
 type RegisterFormData = {
   name: string
@@ -41,19 +42,34 @@ export default function RegisterCard() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      // simula um delay de requisição
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+          },
+        },
+      })
 
-      // validação fake
-      if (data.email === 'teste@email.com') {
-        setError('email', { message: 'Este email já está cadastrado' })
+      if (error) {
+        if (error.message.toLowerCase().includes('already')) {
+          setError('email', { message: 'Este email já está cadastrado' })
+          return
+        }
+
+        setError('root', { message: error.message })
         return
       }
 
       reset()
-      enqueueSnackbar('Conta criada com sucesso!', { variant: 'success' })
+      enqueueSnackbar(
+        'Conta criada com sucesso! Verifique seu email para confirmar.',
+        { variant: 'success' },
+      )
+
       router.push('/')
-    } catch (err) {
+    } catch {
       setError('root', { message: 'Erro inesperado. Tente novamente.' })
     }
   }
