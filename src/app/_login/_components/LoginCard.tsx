@@ -50,6 +50,7 @@ export default function LoginCard() {
     }
 
     router.push('/dashboard')
+    router.refresh()
   }
 
   return (
