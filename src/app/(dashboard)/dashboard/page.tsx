@@ -9,16 +9,18 @@ import {
   Button,
   Menu,
   MenuItem,
+  Skeleton,
 } from '@mui/material'
 import TotalOrdersCard from './_components/TotalOrdersCard'
 import GrossRevenueCard from './_components/GrossRevenueCard'
 import AvgOrderValueCard from './_components/AvgOrderValueCard'
 import TotalSalesChart from './_components/TotalSalesChart'
 import { useState } from 'react'
+import { useAuthUser } from '../_hooks/useAuthUser'
 
 export default function DashboardPage() {
   const notifications = 2
-  const userName = 'João Gomes'
+  const { user, loading } = useAuthUser()
 
   const [dateRange, setDateRange] = useState<'7d' | '30d'>('7d')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -28,9 +30,13 @@ export default function DashboardPage() {
     <Box sx={{ p: 2 }}>
       <Stack spacing={3}>
         <Stack spacing={1}>
-          <Typography variant="h4" fontWeight={700}>
-            Bem-vindo de volta, {userName}
-          </Typography>
+          {loading ? (
+            <Skeleton variant="text" width={320} height={40} />
+          ) : (
+            <Typography variant="h4" fontWeight={700}>
+              Bem-vindo de volta, {user?.name}
+            </Typography>
+          )}
 
           <Typography variant="body2" color="text.secondary">
             Você tem{' '}
