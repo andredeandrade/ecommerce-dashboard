@@ -14,8 +14,8 @@ type Brand = {
 
 // 🔧 MOCK TEMPORÁRIO
 const MOCK_BRANDS: Brand[] = [
-  { id: '0cd07f82-d443-44d9-8eaa-26efdc63f67b', name: 'Apple' },
-  { id: '9e5ec6b3-ce5e-4438-afcc-2d6b0fc7ac3d', name: 'Samsung' },
+  { id: '0b29317d-ec77-46d6-ad41-6a6e4226e3e8', name: 'Nike' },
+  { id: 'f0cae1c4-8d2f-4df8-b506-38fe0177e1a6', name: 'Apple' },
 ]
 
 export default function ProductBrandSelect() {

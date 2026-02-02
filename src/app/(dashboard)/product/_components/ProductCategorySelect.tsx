@@ -13,8 +13,8 @@ type Category = {
 
 // 🔧 MOCK TEMPORÁRIO
 const MOCK_CATEGORIES: Category[] = [
-  { id: '0c17e8b3-5aa0-4543-a259-e99d6573aded', name: 'Eletrônicos' },
-  { id: 'c059ae3d-8a4b-478a-a952-3d789eb72aa5', name: 'Roupas' },
+  { id: '29f3427b-8f66-499f-aeee-51a071a302a4', name: 'Eletrônicos' },
+  { id: 'f4ef52b1-2478-436b-9daf-34b43316d84a', name: 'Roupas' },
 ]
 
 export default function ProductCategorySelect() {

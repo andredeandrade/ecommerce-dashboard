@@ -3,25 +3,35 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
-type Profile = {
+type AuthUser = {
   id: string
   email: string | null
   name: string | null
+  role: 'USER' | 'ADMIN'
+  storeName: string | null
+  storeSlug: string | null
+  isActive: boolean
 }
 
 export function useAuthUser() {
-  const [user, setUser] = useState<Profile | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
 
     const loadUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      setLoading(true)
 
-      if (!user) {
+      const { data, error: userError } = await supabase.auth.getUser()
+
+      if (userError) {
+        console.error('[AUTH_USER_ERROR]', userError)
+      }
+
+      const authUser = data?.user
+
+      if (!authUser) {
         if (mounted) {
           setUser(null)
           setLoading(false)
@@ -29,29 +39,43 @@ export function useAuthUser() {
         return
       }
 
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('id, email, name')
-        .eq('id', user.id)
+        .select('id, name, role, storeName, storeSlug, isActive')
+        .eq('userId', authUser.id)
         .single()
 
+      if (profileError) {
+        console.error('[PROFILE_ERROR]', profileError)
+      }
+
       if (mounted) {
-        setUser(profile ?? null)
+        if (!profile) {
+          setUser(null)
+        } else {
+          setUser({
+            id: profile.id,
+            name: profile.name,
+            role: profile.role,
+            storeName: profile.storeName,
+            storeSlug: profile.storeSlug,
+            isActive: profile.isActive,
+            email: authUser.email ?? null,
+          })
+        }
         setLoading(false)
       }
     }
 
     loadUser()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
       loadUser()
     })
 
     return () => {
       mounted = false
-      subscription.unsubscribe()
+      listener.subscription.unsubscribe()
     }
   }, [])
 

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
+import { requireAuth } from '@/lib/supabase/requireAuth'
 
 export async function POST(request: NextRequest) {
   try {
+    const { profile } = await requireAuth()
+
     const body = await request.json()
 
     const {
@@ -28,6 +31,10 @@ export async function POST(request: NextRequest) {
 
     const product = await prisma.product.create({
       data: {
+        owner: {
+          connect: { id: profile.id },
+        },
+
         name,
         description: description || null,
         price,
@@ -36,8 +43,9 @@ export async function POST(request: NextRequest) {
         quantity: quantity ?? null,
         isActive: isActive ?? true,
 
-        categoryId: categoryId || null,
-        brandId: brandId || null,
+        category: categoryId ? { connect: { id: categoryId } } : undefined,
+
+        brand: brandId ? { connect: { id: brandId } } : undefined,
 
         seoTitle: seoTitle || null,
         seoDescription: seoDescription || null,
@@ -48,19 +56,31 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    const response = {
-      id: product.id,
-      name: product.name,
-      image: null,
-      category: product.category?.name ?? 'Sem categoria',
-      brand: product.brand?.name ?? 'Sem marca',
-      quantity: product.quantity ?? 0,
-      status: product.isActive ? 'Ativo' : 'Inativo',
-      price: Number(product.price),
+    return NextResponse.json(
+      {
+        id: product.id,
+        name: product.name,
+        image: null,
+        category: product.category?.name ?? 'Sem categoria',
+        brand: product.brand?.name ?? 'Sem marca',
+        quantity: product.quantity ?? 0,
+        status: product.isActive ? 'Ativo' : 'Inativo',
+        price: Number(product.price),
+      },
+      { status: 201 },
+    )
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    return NextResponse.json(response, { status: 201 })
-  } catch (error) {
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[CREATE_PRODUCT_ERROR]', error)
 
     return NextResponse.json(
