@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { useSnackbar } from 'notistack'
 import PasswordInput from '@/components/ui/inputs/PasswordInput'
 import { supabase } from '@/lib/supabase/client'
+import { createProfile } from '@/services/profile/createProfile'
 
 type RegisterFormData = {
   name: string
@@ -42,14 +43,9 @@ export default function RegisterCard() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
-        options: {
-          data: {
-            name: data.name,
-          },
-        },
       })
 
       if (error) {
@@ -61,6 +57,11 @@ export default function RegisterCard() {
         setError('root', { message: error.message })
         return
       }
+
+      await createProfile({
+        userId: authData.user!.id,
+        name: data.name,
+      })
 
       reset()
       enqueueSnackbar(

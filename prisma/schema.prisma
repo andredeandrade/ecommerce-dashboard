@@ -8,16 +8,21 @@ datasource db {
 }
 
 model Product {
-  id               String   @id @default(uuid())
-  isActive         Boolean  @default(true)
-  name             String
-  description      String?
+  id          String  @id @default(uuid())
+  isActive    Boolean @default(true)
+  name        String
+  description String?
+
   price            Decimal  @db.Decimal(10, 2)
   promotionalPrice Decimal? @db.Decimal(10, 2)
   sku              String?  @unique
   quantity         Int?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+
+  seoTitle       String?
+  seoDescription String?
+
+  ownerId String
+  owner   Profile @relation(fields: [ownerId], references: [id])
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
@@ -25,14 +30,21 @@ model Product {
   brandId String?
   brand   Brand?  @relation(fields: [brandId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("products")
 }
 
 model Category {
-  id        String    @id @default(uuid())
-  name      String
-  slug      String    @unique
-  isActive  Boolean   @default(true)
+  id       String  @id @default(uuid())
+  name     String
+  slug     String  @unique
+  isActive Boolean @default(true)
+
+  ownerId String
+  owner   Profile @relation(fields: [ownerId], references: [id])
+
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -41,10 +53,14 @@ model Category {
 }
 
 model Brand {
-  id        String    @id @default(uuid())
-  name      String
-  slug      String    @unique
-  isActive  Boolean   @default(true)
+  id       String  @id @default(uuid())
+  name     String
+  slug     String  @unique
+  isActive Boolean @default(true)
+
+  ownerId String
+  owner   Profile @relation(fields: [ownerId], references: [id])
+
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -52,12 +68,28 @@ model Brand {
   @@map("brands")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Profile {
-  id        String   @id @db.Uuid
-  email     String?  @unique
+  id     String @id @default(uuid())
+  userId String @unique
+
   name      String?
-  role      String   @default("admin")
+  storeName String?
+  storeSlug String?
+  isActive  Boolean @default(true)
+
+  role Role @default(USER)
+
+  products   Product[]
+  categories Category[]
+  brands     Brand[]
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("profiles")
 }

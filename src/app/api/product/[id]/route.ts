@@ -1,28 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db'
+import { requireAuth } from '@/lib/supabase/requireAuth'
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+type Params = {
+  params: Promise<{ id: string }>
+}
+
+export async function GET(_: NextRequest, { params }: Params) {
   try {
+    const { profile } = await requireAuth()
     const { id } = await params
 
-    const product = await prisma.product.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        promotionalPrice: true,
-        sku: true,
-        quantity: true,
-        isActive: true,
-        categoryId: true,
-        brandId: true,
-        seoTitle: true,
-        seoDescription: true,
+    const product = await prisma.product.findFirst({
+      where: {
+        id,
+        ownerId: profile.id,
+      },
+      include: {
+        category: true,
+        brand: true,
       },
     })
 
@@ -33,21 +29,7 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({
-      name: product.name,
-      description: product.description,
-      price: Number(product.price),
-      promotionalPrice: product.promotionalPrice
-        ? Number(product.promotionalPrice)
-        : undefined,
-      sku: product.sku,
-      quantity: product.quantity ?? undefined,
-      isActive: product.isActive,
-      categoryId: product.categoryId ?? undefined,
-      brandId: product.brandId ?? undefined,
-      seoTitle: product.seoTitle,
-      seoDescription: product.seoDescription,
-    })
+    return NextResponse.json(product)
   } catch (error) {
     console.error('[GET_PRODUCT_ERROR]', error)
     return NextResponse.json(
@@ -58,57 +40,63 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { profile } = await requireAuth()
     const { id } = await params
-    const body = await req.json()
+    const body = await request.json()
 
-    const { name, price, ...rest } = body
+    const {
+      name,
+      description,
+      price,
+      promotionalPrice,
+      sku,
+      quantity,
+      isActive,
+      categoryId,
+      brandId,
+      seoTitle,
+      seoDescription,
+    } = body
 
-    if (!name || price == null) {
-      return NextResponse.json(
-        { message: 'Nome e preço são obrigatórios' },
-        { status: 400 },
-      )
-    }
-
-    await prisma.product.update({
-      where: { id },
+    const product = await prisma.product.update({
+      where: {
+        id,
+        ownerId: profile.id,
+      },
       data: {
         name,
+        description: description ?? null,
         price,
-        ...rest,
+        promotionalPrice: promotionalPrice ?? null,
+        sku: sku ?? null,
+        quantity: quantity ?? null,
+        isActive: isActive ?? true,
+
+        category: categoryId
+          ? { connect: { id: categoryId } }
+          : { disconnect: true },
+
+        brand: brandId ? { connect: { id: brandId } } : { disconnect: true },
+
+        seoTitle: seoTitle ?? null,
+        seoDescription: seoDescription ?? null,
+      },
+      include: {
+        category: { select: { name: true } },
+        brand: { select: { name: true } },
       },
     })
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json(product)
   } catch (error) {
     console.error('[UPDATE_PRODUCT_ERROR]', error)
+
     return NextResponse.json(
       { message: 'Erro ao atualizar produto' },
-      { status: 500 },
-    )
-  }
-}
-
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
-  try {
-    const { id } = await params
-
-    await prisma.product.delete({
-      where: { id },
-    })
-
-    return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('[DELETE_PRODUCT_ERROR]', error)
-    return NextResponse.json(
-      { message: 'Erro ao deletar produto' },
       { status: 500 },
     )
   }

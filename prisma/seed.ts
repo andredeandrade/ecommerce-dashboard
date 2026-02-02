@@ -1,17 +1,33 @@
 import prisma from '@/lib/db'
 
 async function main() {
-  // Limpa dados (opcional, bom pra dev)
+  // 🧑‍💼 Admin fake (seed)
+  const adminProfile = await prisma.profile.upsert({
+    where: { userId: 'seed-admin' },
+    update: {},
+    create: {
+      userId: 'seed-admin',
+      name: 'Admin',
+      role: 'ADMIN',
+      storeName: 'Admin Store',
+      storeSlug: 'admin-store',
+    },
+  })
+
+  // 🧹 limpar dados (ordem importa)
   await prisma.product.deleteMany()
   await prisma.category.deleteMany()
   await prisma.brand.deleteMany()
 
-  // Cria categorias
+  // 📦 Categorias
   const electronics = await prisma.category.create({
     data: {
       name: 'Electronics',
       slug: 'electronics',
       isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
+      },
     },
   })
 
@@ -20,15 +36,21 @@ async function main() {
       name: 'Clothing',
       slug: 'clothing',
       isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
+      },
     },
   })
 
-  // Cria marcas
+  // 🏷️ Marcas
   const apple = await prisma.brand.create({
     data: {
       name: 'Apple',
       slug: 'apple',
       isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
+      },
     },
   })
 
@@ -37,34 +59,52 @@ async function main() {
       name: 'Nike',
       slug: 'nike',
       isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
+      },
     },
   })
 
-  // Cria produtos
-  await prisma.product.createMany({
-    data: [
-      {
-        name: 'iPhone 15',
-        description: 'Latest Apple smartphone',
-        price: 7500,
-        promotionalPrice: 6999,
-        sku: 'IP15-001',
-        quantity: 10,
-        isActive: true,
-        categoryId: electronics.id,
-        brandId: apple.id,
+  // 🛒 Produtos (create normal, não createMany)
+  await prisma.product.create({
+    data: {
+      name: 'iPhone 15',
+      description: 'Latest Apple smartphone',
+      price: 7500,
+      promotionalPrice: 6999,
+      sku: 'IP15-001',
+      quantity: 10,
+      isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
       },
-      {
-        name: 'Nike Air Force 1',
-        description: 'Classic Nike sneakers',
-        price: 899,
-        sku: 'NK-AF1',
-        quantity: 25,
-        isActive: true,
-        categoryId: clothing.id,
-        brandId: nike.id,
+      category: {
+        connect: { id: electronics.id },
       },
-    ],
+      brand: {
+        connect: { id: apple.id },
+      },
+    },
+  })
+
+  await prisma.product.create({
+    data: {
+      name: 'Nike Air Force 1',
+      description: 'Classic Nike sneakers',
+      price: 899,
+      sku: 'NK-AF1',
+      quantity: 25,
+      isActive: true,
+      owner: {
+        connect: { id: adminProfile.id },
+      },
+      category: {
+        connect: { id: clothing.id },
+      },
+      brand: {
+        connect: { id: nike.id },
+      },
+    },
   })
 }
 
@@ -73,7 +113,7 @@ main()
     console.log('🌱 Seed executado com sucesso')
   })
   .catch((e) => {
-    console.error(e)
+    console.error('❌ Seed error:', e)
     process.exit(1)
   })
   .finally(async () => {
