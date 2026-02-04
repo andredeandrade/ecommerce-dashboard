@@ -1,6 +1,7 @@
 type CreateProfileInput = {
   userId: string
-  name: string
+  name?: string
+  storeName?: string
 }
 
 export async function createProfile(data: CreateProfileInput) {

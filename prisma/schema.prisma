@@ -79,7 +79,7 @@ model Profile {
 
   name      String?
   storeName String?
-  storeSlug String?
+  storeSlug String? @unique
   isActive  Boolean @default(true)
 
   role Role @default(USER)
