@@ -20,6 +20,7 @@ import { createProfile } from '@/services/profile/createProfile'
 
 type RegisterFormData = {
   name: string
+  storeName: string
   email: string
   password: string
   confirmPassword: string
@@ -61,6 +62,7 @@ export default function RegisterCard() {
       await createProfile({
         userId: authData.user!.id,
         name: data.name,
+        storeName: data.storeName,
       })
 
       reset()
@@ -100,6 +102,23 @@ export default function RegisterCard() {
           {...register('name', { required: 'Informe seu nome completo' })}
           error={!!errors.name}
           helperText={errors.name?.message}
+        />
+
+        <TextField
+          fullWidth
+          size="small"
+          variant="outlined"
+          placeholder="Nome da loja"
+          sx={{ mb: 1 }}
+          {...register('storeName', {
+            required: 'Informe o nome da sua loja',
+            minLength: {
+              value: 3,
+              message: 'O nome da loja deve ter pelo menos 3 caracteres',
+            },
+          })}
+          error={!!errors.storeName}
+          helperText={errors.storeName?.message}
         />
 
         <TextField
