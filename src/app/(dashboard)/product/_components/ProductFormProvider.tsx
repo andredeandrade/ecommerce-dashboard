@@ -50,7 +50,19 @@ export default function ProductFormProvider({
 
   useEffect(() => {
     if (product) {
-      methods.reset(product)
+      methods.reset({
+        isActive: product.isActive ?? true,
+        name: product.name ?? '',
+        description: product.description ?? '',
+        price: product.price ?? 0,
+        promotionalPrice: product.promotionalPrice ?? undefined,
+        sku: product.sku ?? '',
+        quantity: product.quantity ?? undefined,
+        categoryId: product.categoryId ?? '',
+        brandId: product.brandId ?? '',
+        seoTitle: product.seoTitle ?? '',
+        seoDescription: product.seoDescription ?? '',
+      })
     }
   }, [product, methods])
 

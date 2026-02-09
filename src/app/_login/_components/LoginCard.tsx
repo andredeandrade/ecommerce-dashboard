@@ -42,10 +42,9 @@ export default function LoginCard() {
       password: data.password,
     })
 
-    setLoading(false)
-
     if (error) {
       setError('Email ou senha incorretos')
+      setLoading(false)
       return
     }
 
