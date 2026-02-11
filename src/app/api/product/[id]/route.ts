@@ -101,3 +101,29 @@ export async function PUT(
     )
   }
 }
+
+export async function DELETE(
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { profile } = await requireAuth()
+    const { id } = await params
+
+    const product = await prisma.product.delete({
+      where: {
+        id,
+        ownerId: profile.id,
+      },
+    })
+
+    return NextResponse.json(product)
+  } catch (error) {
+    console.error('[DELETE_PRODUCT_ERROR]', error)
+
+    return NextResponse.json(
+      { message: 'Erro ao deletar produto' },
+      { status: 500 },
+    )
+  }
+}
