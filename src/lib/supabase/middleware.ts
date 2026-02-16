@@ -26,6 +26,17 @@ export function createSupabaseMiddlewareClient(
           })
         },
       },
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: 'implicit',
+      },
+      global: {
+        headers: {
+          'x-client-info': 'auth-js-server',
+        },
+      },
     },
   )
 }

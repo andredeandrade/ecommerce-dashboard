@@ -3,4 +3,17 @@ import { createBrowserClient } from '@supabase/ssr'
 export const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      flowType: 'implicit',
+    },
+    global: {
+      headers: {
+        'x-client-info': 'auth-js-browser',
+      },
+    },
+  },
 )
