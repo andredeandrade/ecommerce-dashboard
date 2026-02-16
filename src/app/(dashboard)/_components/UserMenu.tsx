@@ -14,10 +14,11 @@ import {
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase/client'
+import { useLogout } from '../_hooks/useLogout'
 
 export default function UserMenu() {
   const router = useRouter()
+  const { logout } = useLogout()
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -36,11 +37,7 @@ export default function UserMenu() {
 
   const handleLogoutClick = async () => {
     handleClose()
-
-    await supabase.auth.signOut()
-
-    router.push('/')
-    router.refresh()
+    await logout()
   }
 
   const name = 'Test User'
