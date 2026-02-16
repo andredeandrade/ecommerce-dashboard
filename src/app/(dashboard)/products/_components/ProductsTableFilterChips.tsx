@@ -3,7 +3,7 @@ import { useTable } from '@/components/ui/table/providers/TableProvider'
 import { useMemo } from 'react'
 
 export default function ProductsTableFilterChips() {
-  const { filters, clearFilter, search } = useTable()
+  const { filters, clearFilter, search, setSearch } = useTable()
 
   const chips = useMemo(() => {
     const items: string[] = []
@@ -33,7 +33,11 @@ export default function ProductsTableFilterChips() {
           label={chip}
           onDelete={() => {
             const [key] = chip.split(':').map((s) => s.trim())
-            clearFilter(key)
+            if (key === 'search') {
+              setSearch('')
+            } else {
+              clearFilter(key)
+            }
           }}
         />
       ))}
