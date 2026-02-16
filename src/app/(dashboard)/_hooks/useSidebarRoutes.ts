@@ -9,8 +9,8 @@ import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined'
-import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLogout } from './useLogout'
 
 type SidebarRoute = {
   label: string
@@ -22,6 +22,7 @@ type SidebarRoute = {
 
 export function useSidebarRoutes(): SidebarRoute[] {
   const router = useRouter()
+  const { logout } = useLogout()
 
   const routes = useMemo(() => {
     const iconsMap = {
@@ -62,11 +63,7 @@ export function useSidebarRoutes(): SidebarRoute[] {
       {
         label: 'Sair',
         iconName: 'LogoutOutlined',
-        onClick: async () => {
-          await supabase.auth.signOut()
-          router.push('/')
-          router.refresh()
-        },
+        onClick: logout,
       },
     ]
 
@@ -76,7 +73,7 @@ export function useSidebarRoutes(): SidebarRoute[] {
         ? iconsMap[route.iconName as keyof typeof iconsMap]
         : undefined,
     }))
-  }, [])
+  }, [logout])
 
   return routes
 }
