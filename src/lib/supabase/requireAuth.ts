@@ -4,21 +4,22 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 export async function requireAuth() {
   const supabase = await createSupabaseServerClient()
 
+  // Use getUser() which validates the stored session with the Supabase Auth server.
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  if (!session) {
+  if (!user) {
     throw new Error('UNAUTHORIZED')
   }
 
   const profile = await prisma.profile.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
   })
 
   if (!profile) {
     throw new Error('PROFILE_NOT_FOUND')
   }
 
-  return { session, user: session.user, profile }
+  return { user, profile }
 }
