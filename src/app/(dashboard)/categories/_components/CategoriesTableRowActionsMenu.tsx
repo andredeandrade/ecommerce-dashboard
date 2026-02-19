@@ -6,18 +6,18 @@ import {
   TableRowActionsMenuItemEdit,
 } from '@/components/ui/table/components'
 import { useRouter } from 'next/navigation'
-import { Product } from '@/types/product'
+import { Category } from '@/types/category'
 import { useState } from 'react'
 import { useSnackbar } from 'notistack'
-import { useDeleteProduct } from '../_hooks/useDeleteProduct'
-import ProductsConfirmDeleteDialog from './ProductsConfirmDeleteDialog'
+import { useDeleteCategory } from '@/app/(dashboard)/categories/_hooks/useDeleteCategory'
+import CategoriesConfirmDeleteDialog from './CategoriesConfirmDeleteDialog'
 
 type Props = {
-  product: Product
+  category: Category
 }
 
-export default function ProductsTableRowActionsMenu(props: Props) {
-  const { product } = props
+export default function CategoriesTableRowActionsMenu(props: Props) {
+  const { category } = props
 
   const router = useRouter()
 
@@ -25,18 +25,18 @@ export default function ProductsTableRowActionsMenu(props: Props) {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const deleteMutation = useDeleteProduct()
+  const deleteMutation = useDeleteCategory()
 
   function handleDelete(id: string) {
     deleteMutation.mutate(id, {
       onSuccess: () => {
-        enqueueSnackbar('Produto excluído com sucesso!', {
+        enqueueSnackbar('Categoria excluída com sucesso!', {
           variant: 'success',
         })
         setOpenDeleteDialog(false)
       },
       onError: () => {
-        enqueueSnackbar('Erro ao excluir o produto.', {
+        enqueueSnackbar('Erro ao excluir a categoria.', {
           variant: 'error',
         })
       },
@@ -51,7 +51,7 @@ export default function ProductsTableRowActionsMenu(props: Props) {
             key="edit"
             onClick={() => {
               closeMenu()
-              router.push(`/product/${product.id}/edit`)
+              router.push(`/category/${category.id}/edit`)
             }}
           />,
           <TableRowActionsMenuItemDelete
@@ -64,11 +64,11 @@ export default function ProductsTableRowActionsMenu(props: Props) {
         ]}
       </TableRowActionsMenu>
 
-      <ProductsConfirmDeleteDialog
+      <CategoriesConfirmDeleteDialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
         onConfirm={() => {
-          handleDelete(product.id)
+          handleDelete(category.id)
         }}
         loading={deleteMutation.isPending}
       />
