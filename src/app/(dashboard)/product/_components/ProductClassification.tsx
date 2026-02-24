@@ -1,11 +1,16 @@
 'use client'
 
-import { Paper, Typography, Box, TextField } from '@mui/material'
-import { useProductForm } from '../_hooks/useProductForm'
-import ProductCategorySelect from './ProductCategorySelect'
+import { Paper, Typography, Box } from '@mui/material'
 import ProductBrandSelect from './ProductBrandSelect'
+import { useProductForm } from '../_hooks/useProductForm'
+import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
+import { Controller } from 'react-hook-form'
+import CategorySelect from '@/components/ui/inputs/categorySelect/CategorySelect'
 
 export default function ProductClassification() {
+  const { control } = useProductForm()
+  const isLoading = useProductFormLoading()
+
   return (
     <Paper sx={{ p: 3 }}>
       <Typography fontWeight={600} mb={2}>
@@ -13,7 +18,14 @@ export default function ProductClassification() {
       </Typography>
 
       <Box display="flex" flexDirection="column" gap={2}>
-        <ProductCategorySelect />
+        <Controller
+          name="categoryId"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <CategorySelect {...field} isLoading={isLoading} />
+          )}
+        />
         <ProductBrandSelect />
       </Box>
     </Paper>

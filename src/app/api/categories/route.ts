@@ -11,15 +11,33 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search') || ''
     const rawPage = Number(searchParams.get('page'))
     const rawLimit = Number(searchParams.get('limit'))
+    const rawAll = searchParams.get('all')
 
     const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1
     const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : 10
     const skip = (page - 1) * limit
+    const all = rawAll === 'true'
 
     const where = {
       ownerId: profile.id,
       name: { contains: search, mode: 'insensitive' },
     } as any
+
+    if (all) {
+      const categories = await prisma.category.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+      })
+
+      const items = categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+        status: c.isActive ? 'Ativo' : 'Inativo',
+      }))
+
+      // Return array directly when requesting all categories
+      return NextResponse.json(items)
+    }
 
     const [categories, total] = await Promise.all([
       prisma.category.findMany({
