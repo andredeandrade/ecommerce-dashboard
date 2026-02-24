@@ -6,6 +6,7 @@ import { useProductForm } from '../_hooks/useProductForm'
 import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 import { Controller } from 'react-hook-form'
 import CategorySelect from '@/components/ui/inputs/categorySelect/CategorySelect'
+import BrandSelect from '@/components/ui/inputs/brandSelect/BrandSelect'
 
 export default function ProductClassification() {
   const { control } = useProductForm()
@@ -26,7 +27,14 @@ export default function ProductClassification() {
             <CategorySelect {...field} isLoading={isLoading} />
           )}
         />
-        <ProductBrandSelect />
+        <Controller
+          name="brandId"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <BrandSelect {...field} isLoading={isLoading} />
+          )}
+        />
       </Box>
     </Paper>
   )

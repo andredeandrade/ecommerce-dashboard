@@ -11,6 +11,7 @@ export function useCreateCategory() {
     mutationFn: (data: CategoryFormData) => createCategory(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
+      queryClient.invalidateQueries({ queryKey: ['all-categories'] })
     },
   })
 }

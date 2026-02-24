@@ -10,6 +10,7 @@ export function useDeleteCategory() {
     mutationFn: (id: string) => deleteCategory(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
+      queryClient.invalidateQueries({ queryKey: ['all-categories'] })
     },
   })
 }

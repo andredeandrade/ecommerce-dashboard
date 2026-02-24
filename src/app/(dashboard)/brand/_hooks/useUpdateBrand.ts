@@ -11,6 +11,7 @@ export function useUpdateBrand(id: string) {
     mutationFn: (data: BrandFormData) => updateBrand(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] })
+      queryClient.invalidateQueries({ queryKey: ['all-brands'] })
       queryClient.invalidateQueries({ queryKey: ['brand', id] })
     },
   })

@@ -10,6 +10,7 @@ export function useDeleteBrand() {
     mutationFn: (id: string) => deleteBrand(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] })
+      queryClient.invalidateQueries({ queryKey: ['all-brands'] })
     },
   })
 }

@@ -11,6 +11,7 @@ export function useCreateBrand() {
     mutationFn: (data: BrandFormData) => createBrand(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] })
+      queryClient.invalidateQueries({ queryKey: ['all-brands'] })
     },
   })
 }

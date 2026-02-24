@@ -11,6 +11,7 @@ export function useUpdateCategory(id: string) {
     mutationFn: (data: CategoryFormData) => updateCategory(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
+      queryClient.invalidateQueries({ queryKey: ['all-categories'] })
       queryClient.invalidateQueries({ queryKey: ['category', id] })
     },
   })
