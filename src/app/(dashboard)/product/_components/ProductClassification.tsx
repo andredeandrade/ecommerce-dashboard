@@ -1,7 +1,6 @@
 'use client'
 
 import { Paper, Typography, Box } from '@mui/material'
-import ProductBrandSelect from './ProductBrandSelect'
 import { useProductForm } from '../_hooks/useProductForm'
 import { useProductFormLoading } from '../_contexts/ProductFormLoadingContext'
 import { Controller } from 'react-hook-form'
