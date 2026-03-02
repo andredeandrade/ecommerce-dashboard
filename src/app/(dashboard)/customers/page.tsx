@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import CustomersTable from './_components/CustomersTable'
 
 export default function CustomersPage() {
   return (
@@ -8,6 +9,8 @@ export default function CustomersPage() {
           Clientes
         </Typography>
       </Box>
+
+      <CustomersTable />
     </Box>
   )
 }

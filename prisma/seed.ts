@@ -21,6 +21,22 @@ async function main() {
 
   /**
    * ============================
+   * 👥 CUSTOMERS (SEED)
+   * ============================
+   */
+  const defaultCustomer = await prisma.customer.upsert({
+    where: { email: 'jane.doe@example.com' },
+    update: {},
+    create: {
+      name: 'Jane Doe',
+      email: 'jane.doe@example.com',
+      phone: '555-1234',
+      isActive: true,
+    },
+  })
+
+  /**
+   * ============================
    * 📦 CATEGORIES
    * ============================
    */
@@ -122,6 +138,8 @@ async function main() {
    */
 
   const subtotal = Number(iphone.price) + Number(airForce.price)
+  // associar o pedido ao cliente seed
+  const customerId = defaultCustomer.id
 
   const orderExists = await prisma.order.findFirst({
     where: { ownerId: adminProfile.id, subtotal },
@@ -134,6 +152,7 @@ async function main() {
         subtotal,
         total: subtotal,
         ownerId: adminProfile.id,
+        customerId,
         items: {
           create: [
             {
@@ -156,7 +175,7 @@ async function main() {
     })
   }
 
-  console.log('🌱 Seed executado com sucesso (sem apagar dados)')
+  console.log('🌱 Seed executado com sucesso')
 }
 
 main()

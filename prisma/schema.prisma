@@ -106,11 +106,29 @@ enum OrderStatus {
   REFUNDED
 }
 
+model Customer {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  phone    String?
+  isActive Boolean @default(true)
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("customers")
+}
+
 model Order {
   id String @id @default(uuid())
 
   ownerId String
   owner   Profile @relation(fields: [ownerId], references: [id])
+
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
 
   status   OrderStatus @default(PENDING)
   subtotal Decimal     @db.Decimal(10, 2)
