@@ -88,10 +88,11 @@ model Profile {
   products   Product[]
   categories Category[]
   brands     Brand[]
+  orders     Order[]
+  settings   Settings?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orders    Order[]
 
   @@map("profiles")
 }
@@ -119,6 +120,55 @@ model Customer {
   updatedAt DateTime @updatedAt
 
   @@map("customers")
+}
+
+model Settings {
+  id String @id @default(uuid())
+
+  ownerId String  @unique
+  owner   Profile @relation(fields: [ownerId], references: [id])
+
+  // Informações da loja
+  storeName        String?
+  storeDescription String?
+  storeEmail       String?
+  storePhone       String?
+  storeAddress     String?
+
+  // Links sociais
+  facebookUrl  String?
+  instagramUrl String?
+  twitterUrl   String?
+  whatsappUrl  String?
+
+  // Configurações fiscais
+  taxId   String? // CNPJ/CPF
+  taxRate Decimal? @db.Decimal(5, 2) // % de imposto padrão
+
+  // Configurações de envio
+  freeShippingMinValue Decimal? @db.Decimal(10, 2)
+  defaultShippingCost  Decimal? @db.Decimal(10, 2)
+
+  // Configurações de notificação
+  enableOrderNotifications    Boolean @default(true)
+  enableCustomerNotifications Boolean @default(true)
+  enableLowStockAlerts        Boolean @default(true)
+  lowStockThreshold           Int?    @default(10)
+
+  // Configurações regionais
+  currency String @default("BRL")
+  timezone String @default("America/Sao_Paulo")
+  locale   String @default("pt-BR")
+
+  // Termos e políticas
+  termsOfService String? @db.Text
+  privacyPolicy  String? @db.Text
+  returnPolicy   String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
 }
 
 model Order {

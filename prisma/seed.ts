@@ -21,6 +21,34 @@ async function main() {
 
   /**
    * ============================
+   * ⚙️ SETTINGS (SEED)
+   * ============================
+   */
+  await prisma.settings.upsert({
+    where: { ownerId: adminProfile.id },
+    update: {},
+    create: {
+      ownerId: adminProfile.id,
+      storeName: 'Minha Loja',
+      storeDescription: 'A melhor loja de e-commerce',
+      storeEmail: 'contato@minhaloja.com',
+      storePhone: '(11) 98765-4321',
+      storeAddress: 'Rua Exemplo, 123 - São Paulo, SP',
+      currency: 'BRL',
+      timezone: 'America/Sao_Paulo',
+      locale: 'pt-BR',
+      taxRate: 5.0,
+      freeShippingMinValue: 200.0,
+      defaultShippingCost: 15.0,
+      enableOrderNotifications: true,
+      enableCustomerNotifications: true,
+      enableLowStockAlerts: true,
+      lowStockThreshold: 10,
+    },
+  })
+
+  /**
+   * ============================
    * 👥 CUSTOMERS (SEED)
    * ============================
    */
