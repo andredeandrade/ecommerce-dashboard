@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import OrdersTable from './_components/OrdersTable'
 
 export default function OrdersPage() {
   return (
@@ -8,6 +9,8 @@ export default function OrdersPage() {
           Pedidos
         </Typography>
       </Box>
+
+      <OrdersTable />
     </Box>
   )
 }

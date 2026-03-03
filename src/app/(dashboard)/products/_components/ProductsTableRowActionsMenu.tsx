@@ -6,14 +6,14 @@ import {
   TableRowActionsMenuItemEdit,
 } from '@/components/ui/table/components'
 import { useRouter } from 'next/navigation'
-import { ProductRow } from './ProductsTableRow'
+import { Product } from '@/types/product'
 import { useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useDeleteProduct } from '../_hooks/useDeleteProduct'
 import ProductsConfirmDeleteDialog from './ProductsConfirmDeleteDialog'
 
 type Props = {
-  product: ProductRow
+  product: Product
 }
 
 export default function ProductsTableRowActionsMenu(props: Props) {
@@ -27,7 +27,7 @@ export default function ProductsTableRowActionsMenu(props: Props) {
 
   const deleteMutation = useDeleteProduct()
 
-  function handleDelete(id: number) {
+  function handleDelete(id: string) {
     deleteMutation.mutate(id, {
       onSuccess: () => {
         enqueueSnackbar('Produto excluído com sucesso!', {

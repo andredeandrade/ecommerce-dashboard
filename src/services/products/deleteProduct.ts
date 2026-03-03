@@ -1,4 +1,4 @@
-export async function deleteProduct(id: number) {
+export async function deleteProduct(id: string) {
   const res = await fetch(`/api/product/${id}`, {
     method: 'DELETE',
   })

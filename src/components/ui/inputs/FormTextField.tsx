@@ -1,6 +1,6 @@
 import { TextField, TextFieldProps, Skeleton } from '@mui/material'
 
-type FormTextFieldProps = TextFieldProps & {
+export type FormTextFieldProps = TextFieldProps & {
   isLoading?: boolean
   skeletonHeight?: number
 }

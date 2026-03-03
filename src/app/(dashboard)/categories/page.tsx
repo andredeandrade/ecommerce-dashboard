@@ -1,4 +1,6 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Button } from '@mui/material'
+import CategoriesTable from './_components/CategoriesTable'
+import Link from 'next/link'
 
 export default function CategoriesPage() {
   return (
@@ -7,7 +9,18 @@ export default function CategoriesPage() {
         <Typography variant="h4" fontWeight={600}>
           Categorias
         </Typography>
+
+        <Button
+          component={Link}
+          href="/category/create"
+          variant="contained"
+          size="large"
+        >
+          Adicionar Categoria
+        </Button>
       </Box>
+
+      <CategoriesTable />
     </Box>
   )
 }
