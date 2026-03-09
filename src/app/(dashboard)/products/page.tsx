@@ -10,14 +10,11 @@ export default function ProductsPage() {
           Produtos
         </Typography>
 
-        <Button
-          component={Link}
-          href="/product/create"
-          variant="contained"
-          size="large"
-        >
-          Adicionar Produto
-        </Button>
+        <Link href="/product/create" style={{ textDecoration: 'none' }}>
+          <Button variant="contained" size="large">
+            Adicionar Produto
+          </Button>
+        </Link>
       </Box>
       <ProductsTable />
     </Box>

@@ -10,14 +10,11 @@ export default function CategoriesPage() {
           Categorias
         </Typography>
 
-        <Button
-          component={Link}
-          href="/category/create"
-          variant="contained"
-          size="large"
-        >
-          Adicionar Categoria
-        </Button>
+        <Link href="/category/create" style={{ textDecoration: 'none' }}>
+          <Button variant="contained" size="large">
+            Adicionar Categoria
+          </Button>
+        </Link>
       </Box>
 
       <CategoriesTable />

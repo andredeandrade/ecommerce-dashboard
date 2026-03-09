@@ -1,6 +1,7 @@
 import { Box, Typography, Button } from '@mui/material'
 import BrandsTable from './_components/BrandsTable'
 import Link from 'next/link'
+
 export default function BrandsPage() {
   return (
     <Box display="flex" flexDirection="column" gap={4}>
@@ -9,14 +10,11 @@ export default function BrandsPage() {
           Marcas
         </Typography>
 
-        <Button
-          component={Link}
-          href="/brand/create"
-          variant="contained"
-          size="large"
-        >
-          Adicionar Marca
-        </Button>
+        <Link href="/brand/create" style={{ textDecoration: 'none' }}>
+          <Button variant="contained" size="large">
+            Adicionar Marca
+          </Button>
+        </Link>
       </Box>
 
       <BrandsTable />
