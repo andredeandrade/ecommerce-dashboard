@@ -8,93 +8,159 @@ datasource db {
 }
 
 model Product {
-  id          String  @id @default(uuid())
-  isActive    Boolean @default(true)
-  name        String
-  description String?
-
-  price            Decimal  @db.Decimal(10, 2)
-  promotionalPrice Decimal? @db.Decimal(10, 2)
-  sku              String?  @unique
+  id               String      @id @default(uuid())
+  isActive         Boolean     @default(true)
+  name             String
+  description      String?
+  price            Decimal     @db.Decimal(10, 2)
+  promotionalPrice Decimal?    @db.Decimal(10, 2)
+  sku              String?     @unique
   quantity         Int?
-
-  seoTitle       String?
-  seoDescription String?
-
-  ownerId String
-  owner   Profile @relation(fields: [ownerId], references: [id])
-
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
-
-  brandId String?
-  brand   Brand?  @relation(fields: [brandId], references: [id])
-
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  orderItems OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  ownerId          String
+  categoryId       String?
+  brandId          String?
+  seoDescription   String?
+  seoTitle         String?
+  orderItems       OrderItem[]
+  brand            Brand?      @relation(fields: [brandId], references: [id])
+  category         Category?   @relation(fields: [categoryId], references: [id])
+  owner            Profile     @relation(fields: [ownerId], references: [id])
 
   @@map("products")
 }
 
 model Category {
-  id       String  @id @default(uuid())
-  name     String
-  slug     String  @unique
-  isActive Boolean @default(true)
-
-  ownerId String
-  owner   Profile @relation(fields: [ownerId], references: [id])
-
-  products  Product[]
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  ownerId   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  owner     Profile   @relation(fields: [ownerId], references: [id])
+  products  Product[]
 
   @@map("categories")
 }
 
 model Brand {
-  id       String  @id @default(uuid())
-  name     String
-  slug     String  @unique
-  isActive Boolean @default(true)
-
-  ownerId String
-  owner   Profile @relation(fields: [ownerId], references: [id])
-
-  products  Product[]
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  ownerId   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  owner     Profile   @relation(fields: [ownerId], references: [id])
+  products  Product[]
 
   @@map("brands")
+}
+
+model Profile {
+  id         String     @id @default(uuid())
+  userId     String     @unique
+  name       String?
+  storeName  String?
+  storeSlug  String?    @unique
+  isActive   Boolean    @default(true)
+  role       Role       @default(USER)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  brands     Brand[]
+  categories Category[]
+  orders     Order[]
+  products   Product[]
+  settings   Settings?
+
+  @@map("profiles")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+
+  @@map("customers")
+}
+
+model Settings {
+  id                          String   @id @default(uuid())
+  ownerId                     String   @unique
+  storeName                   String?
+  storeDescription            String?
+  storeEmail                  String?
+  storePhone                  String?
+  storeAddress                String?
+  facebookUrl                 String?
+  instagramUrl                String?
+  twitterUrl                  String?
+  whatsappUrl                 String?
+  taxId                       String?
+  taxRate                     Decimal? @db.Decimal(5, 2)
+  freeShippingMinValue        Decimal? @db.Decimal(10, 2)
+  defaultShippingCost         Decimal? @db.Decimal(10, 2)
+  enableOrderNotifications    Boolean  @default(true)
+  enableCustomerNotifications Boolean  @default(true)
+  enableLowStockAlerts        Boolean  @default(true)
+  lowStockThreshold           Int?     @default(10)
+  currency                    String   @default("BRL")
+  timezone                    String   @default("America/Sao_Paulo")
+  locale                      String   @default("pt-BR")
+  termsOfService              String?
+  privacyPolicy               String?
+  returnPolicy                String?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  owner                       Profile  @relation(fields: [ownerId], references: [id])
+
+  @@map("settings")
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  ownerId    String
+  status     OrderStatus @default(PENDING)
+  subtotal   Decimal     @db.Decimal(10, 2)
+  tax        Decimal?    @db.Decimal(10, 2)
+  shipping   Decimal?    @db.Decimal(10, 2)
+  total      Decimal     @db.Decimal(10, 2)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  customerId String?
+  items      OrderItem[]
+  customer   Customer?   @relation(fields: [customerId], references: [id])
+  owner      Profile     @relation(fields: [ownerId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  name      String
+  sku       String?
+  price     Decimal  @db.Decimal(10, 2)
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
 }
 
 enum Role {
   USER
   ADMIN
-}
-
-model Profile {
-  id     String @id @default(uuid())
-  userId String @unique
-
-  name      String?
-  storeName String?
-  storeSlug String? @unique
-  isActive  Boolean @default(true)
-
-  role Role @default(USER)
-
-  products   Product[]
-  categories Category[]
-  brands     Brand[]
-  orders     Order[]
-  settings   Settings?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("profiles")
 }
 
 enum OrderStatus {
@@ -105,111 +171,4 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   REFUNDED
-}
-
-model Customer {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  phone    String?
-  isActive Boolean @default(true)
-
-  orders Order[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("customers")
-}
-
-model Settings {
-  id String @id @default(uuid())
-
-  ownerId String  @unique
-  owner   Profile @relation(fields: [ownerId], references: [id])
-
-  // Informações da loja
-  storeName        String?
-  storeDescription String?
-  storeEmail       String?
-  storePhone       String?
-  storeAddress     String?
-
-  // Links sociais
-  facebookUrl  String?
-  instagramUrl String?
-  twitterUrl   String?
-  whatsappUrl  String?
-
-  // Configurações fiscais
-  taxId   String? // CNPJ/CPF
-  taxRate Decimal? @db.Decimal(5, 2) // % de imposto padrão
-
-  // Configurações de envio
-  freeShippingMinValue Decimal? @db.Decimal(10, 2)
-  defaultShippingCost  Decimal? @db.Decimal(10, 2)
-
-  // Configurações de notificação
-  enableOrderNotifications    Boolean @default(true)
-  enableCustomerNotifications Boolean @default(true)
-  enableLowStockAlerts        Boolean @default(true)
-  lowStockThreshold           Int?    @default(10)
-
-  // Configurações regionais
-  currency String @default("BRL")
-  timezone String @default("America/Sao_Paulo")
-  locale   String @default("pt-BR")
-
-  // Termos e políticas
-  termsOfService String? @db.Text
-  privacyPolicy  String? @db.Text
-  returnPolicy   String? @db.Text
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("settings")
-}
-
-model Order {
-  id String @id @default(uuid())
-
-  ownerId String
-  owner   Profile @relation(fields: [ownerId], references: [id])
-
-  customerId String?
-  customer   Customer? @relation(fields: [customerId], references: [id])
-
-  status   OrderStatus @default(PENDING)
-  subtotal Decimal     @db.Decimal(10, 2)
-  tax      Decimal?    @db.Decimal(10, 2)
-  shipping Decimal?    @db.Decimal(10, 2)
-  total    Decimal     @db.Decimal(10, 2)
-
-  items OrderItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("orders")
-}
-
-model OrderItem {
-  id String @id @default(uuid())
-
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-
-  name     String
-  sku      String?
-  price    Decimal @db.Decimal(10, 2)
-  quantity Int     @default(1)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("order_items")
 }
