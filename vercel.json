@@ -1,5 +1,5 @@
 {
-  "buildCommand": "if [ -d prisma/migrations ]; then npx prisma migrate deploy; else echo 'No prisma/migrations found, skipping migrate deploy'; fi && npm run build",
+  "buildCommand": "npx prisma generate && if [ -d prisma/migrations ]; then npx prisma migrate deploy; else echo 'No prisma/migrations found, skipping migrate deploy'; fi && npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "outputDirectory": ".next"
