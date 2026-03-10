@@ -30,7 +30,18 @@ export async function GET(_: NextRequest, { params }: Params) {
     }
 
     return NextResponse.json(product)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[GET_PRODUCT_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao buscar produto' },
@@ -92,7 +103,18 @@ export async function PUT(
     })
 
     return NextResponse.json(product)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[UPDATE_PRODUCT_ERROR]', error)
 
     return NextResponse.json(
@@ -118,7 +140,18 @@ export async function DELETE(
     })
 
     return NextResponse.json(product)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[DELETE_PRODUCT_ERROR]', error)
 
     return NextResponse.json(
