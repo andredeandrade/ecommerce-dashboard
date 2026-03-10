@@ -31,7 +31,18 @@ export async function GET(
     }
 
     return NextResponse.json(response)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[GET_CUSTOMER_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao buscar cliente' },
@@ -61,7 +72,18 @@ export async function PUT(
     })
 
     return NextResponse.json(customer)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[UPDATE_CUSTOMER_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao atualizar cliente' },
@@ -83,7 +105,18 @@ export async function DELETE(
     })
 
     return NextResponse.json(customer)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[DELETE_CUSTOMER_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao deletar cliente' },

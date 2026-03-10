@@ -22,7 +22,18 @@ export async function GET(
     }
 
     return NextResponse.json(category)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[GET_CATEGORY_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao buscar categoria' },
@@ -52,7 +63,18 @@ export async function PUT(
     })
 
     return NextResponse.json(category)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[UPDATE_CATEGORY_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao atualizar categoria' },
@@ -74,7 +96,18 @@ export async function DELETE(
     })
 
     return NextResponse.json(category)
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      return NextResponse.json(
+        { error: 'Perfil não encontrado' },
+        { status: 404 },
+      )
+    }
+
     console.error('[DELETE_CATEGORY_ERROR]', error)
     return NextResponse.json(
       { message: 'Erro ao deletar categoria' },
